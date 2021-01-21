@@ -1,24 +1,16 @@
-import React from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import ProTip from '../src/ProTip';
-import Link from '../src/Link';
-import Copyright from '../src/Copyright';
+import React, { useEffect } from 'react'
+
+import Router from 'next/router'
+
+import Layout from '../src/Layout'
+import useUserStore from '../store'
 
 export default function Index() {
-  return (
-    <Container maxWidth="sm">
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Next.js v5-alpha with TypeScript example
-        </Typography>
-        <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-        <ProTip />
-        <Copyright />
-      </Box>
-    </Container>
-  );
+	const isLoggedIn = useUserStore((state) => state.isLoggedIn)
+	useEffect(() => {
+		if (!isLoggedIn) Router.push('/auth/signin')
+		else Router.push('/dashboard')
+	}, [isLoggedIn])
+
+	return <Layout>Loading...</Layout>
 }

@@ -1,28 +1,30 @@
 {
-  "name": "nextjs-with-typescript",
-  "version": "5.0.0",
-  "private": true,
-  "dependencies": {
-    "@emotion/cache": "latest",
-    "@emotion/react": "latest",
-    "@emotion/styled": "latest",
-    "@emotion/server": "latest",
-    "@material-ui/core": "next",
-    "clsx": "latest",
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest"
-  },
-  "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
-    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
-  },
-  "devDependencies": {
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "typescript": "latest"
-  }
+	"name": "advanced-lab-analysis-system",
+	"version": "0.0.1",
+	"private": true,
+	"dependencies": {
+		"@material-ui/core": "latest",
+		"@material-ui/icons": "latest",
+		"@monaco-editor/react": "^4.0.5",
+		"clsx": "latest",
+		"monaco-editor": "^0.21.3",
+		"next": "latest",
+		"react": "latest",
+		"react-dom": "latest",
+		"zustand": "^3.3.1"
+	},
+	"scripts": {
+		"dev": "next",
+		"build": "next build",
+		"start": "next start",
+		"post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+	},
+	"devDependencies": {
+		"@types/next": "latest",
+		"@types/next-auth": "^3.1.21",
+		"@types/node": "latest",
+		"@types/react": "latest",
+		"@types/react-dom": "latest",
+		"typescript": "latest"
+	}
 }
