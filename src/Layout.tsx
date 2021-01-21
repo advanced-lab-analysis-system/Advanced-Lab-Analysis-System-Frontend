@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center',
 		background: 'black',
 		color: 'white',
-		marginTop: theme.spacing(2),
+		marginTop: 'auto',
 		flexShrink: 0,
 	},
 }))
