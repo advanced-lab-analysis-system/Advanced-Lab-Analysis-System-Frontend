@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
 		flex: 'auto',
 	},
 	appBar: {
-		background: 'black',
+		zIndex: theme.zIndex.drawer + 1,
 	},
 	menuButton: {
 		marginRight: theme.spacing(2),
@@ -40,19 +40,16 @@ const Layout = ({ children }: { children: ReactNode }) => {
 	return (
 		<div className={classes.root}>
 			<header>
-				<AppBar position='static'>
+				<AppBar position='relative' className={classes.appBar}>
 					<Toolbar>
-						<Typography
-							variant='h5'
-							// color='textPrimary'
-							className={classes.title}>
+						<Typography component='h1' variant='h6' color='inherit' noWrap className={classes.title}>
 							ALAS
 						</Typography>
 					</Toolbar>
 				</AppBar>
 			</header>
 			<main className={classes.main}>{children}</main>
-			<footer className={classes.footer}></footer>
+			{/* <footer className={classes.footer}></footer> */}
 		</div>
 	)
 }

@@ -3,11 +3,12 @@ import Layout from '../src/Layout'
 
 import Router from 'next/router'
 
-import { Button, Container, Divider, Grid, makeStyles, Paper, Typography } from '@material-ui/core'
+import { Button, CircularProgress, Container, Divider, Grid, makeStyles, Paper, Typography } from '@material-ui/core'
 
 import useUserStore from '../store'
 
 import { ExamData } from '../src/types'
+import Link from '../src/Link'
 
 const useStyles = makeStyles((theme) => ({
 	examTile: {
@@ -35,15 +36,25 @@ const ExamTile = ({ exam }: { exam: ExamData }) => {
 
 	return (
 		<Paper className={classes.examTile} variant='outlined'>
-			<Typography variant='body1' className={classes.tileText}>
-				{exam.examName}
-			</Typography>
-			<Typography variant='body1' className={classes.tileText}>
-				{exam.noOfQuestions}
-			</Typography>
-			<Button variant='contained' color='primary'>
-				{exam.status === 'upcoming' ? 'Start' : 'View'}
-			</Button>
+			<Grid container>
+				<Grid item md={6}>
+					<Typography variant='body1' className={classes.tileText}>
+						{exam.examName}
+					</Typography>
+				</Grid>
+				<Grid item md={4}>
+					<Typography variant='body1' className={classes.tileText}>
+						{exam.noOfQuestions}
+					</Typography>
+				</Grid>
+				<Grid item md={2}>
+					<Link href={`/exam/${encodeURIComponent(exam.examId)}`} passHref>
+						<Button variant='contained' color='primary'>
+							{exam.status === 'upcoming' ? 'Start' : 'View'}
+						</Button>
+					</Link>
+				</Grid>
+			</Grid>
 		</Paper>
 	)
 }
@@ -66,10 +77,11 @@ const dashboard = () => {
 		})
 			.then((response) => response.json())
 			.then((res) => {
-				res.forEach((element: ExamData) => {
-					if (element.status === 'upcoming') setUpcomingExams([...upcomingExams, element])
-					else setEndedExams([...endedExams, element])
+				res.map((element: ExamData) => {
+					if (element.status === 'upcoming') setUpcomingExams((upcomingExams) => [...upcomingExams, element])
+					else setEndedExams((endedExams) => [...endedExams, element])
 				})
+				console.log(res)
 			})
 	}
 
@@ -103,7 +115,7 @@ const dashboard = () => {
 					</Container>
 				</Layout>
 			)}
-			{!isLoggedIn && <>Loading...</>}
+			{!isLoggedIn && <CircularProgress />}
 		</>
 	)
 }
