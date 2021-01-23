@@ -88,7 +88,7 @@ const dashboard = () => {
 	useEffect(() => {
 		if (!isLoggedIn) Router.push('/auth/signin')
 		else getExams()
-	}, [])
+	}, [isLoggedIn])
 
 	return (
 		<>

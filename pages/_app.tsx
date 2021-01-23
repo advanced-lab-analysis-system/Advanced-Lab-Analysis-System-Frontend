@@ -8,7 +8,6 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 
 import theme from '../src/theme'
 import '../src/styles/globals.css'
-import Layout from '../src/Layout'
 
 export default function MyApp(props: AppProps) {
 	const { Component, pageProps } = props

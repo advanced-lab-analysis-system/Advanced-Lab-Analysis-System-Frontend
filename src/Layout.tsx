@@ -1,5 +1,6 @@
-import { AppBar, makeStyles, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Button, makeStyles, Toolbar, Typography } from '@material-ui/core'
 import React, { ReactNode } from 'react'
+import useUserStore from '../store'
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -37,17 +38,31 @@ const useStyles = makeStyles((theme) => ({
 
 const Layout = ({ children }: { children: ReactNode }) => {
 	const classes = useStyles()
+
+	const isLoggedIn = useUserStore((state) => state.isLoggedIn)
+	const clearUserData = useUserStore((state) => state.clearUserData)
 	return (
 		<div className={classes.root}>
 			<header>
-				<AppBar position='relative' className={classes.appBar}>
+				<AppBar position='fixed' className={classes.appBar}>
 					<Toolbar>
 						<Typography component='h1' variant='h6' color='inherit' noWrap className={classes.title}>
 							ALAS
 						</Typography>
+						{isLoggedIn && (
+							<Button
+								variant='contained'
+								color='secondary'
+								onClick={() => {
+									clearUserData()
+								}}>
+								Logout
+							</Button>
+						)}
 					</Toolbar>
 				</AppBar>
 			</header>
+			<Toolbar />
 			<main className={classes.main}>{children}</main>
 			{/* <footer className={classes.footer}></footer> */}
 		</div>

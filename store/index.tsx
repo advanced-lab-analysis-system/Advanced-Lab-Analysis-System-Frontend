@@ -25,7 +25,7 @@ const useUserStore = create<UserState>((set) => ({
 	addFullname: (newFullname) => set(() => ({ fullname: newFullname })),
 	addRole: (newRole) => set(() => ({ role: newRole })),
 	handleIsLoggedIn: (newIsLoggedIn) => set(() => ({ isLoggedIn: newIsLoggedIn })),
-	clearUserData: () => set({ username: '', fullname: '', accessToken: '' }),
+	clearUserData: () => set({ username: '', fullname: '', accessToken: 'Bearer ', role: '', isLoggedIn: false }),
 }))
 
 export default useUserStore

@@ -11,6 +11,7 @@
 		"next": "latest",
 		"react": "latest",
 		"react-dom": "latest",
+		"react-markdown": "^5.0.3",
 		"zustand": "^3.3.1"
 	},
 	"scripts": {

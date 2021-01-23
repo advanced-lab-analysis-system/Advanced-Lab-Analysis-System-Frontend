@@ -52,8 +52,6 @@ const SignInComponent = ({ role }: { role: string }) => {
 	const addRole = useUserStore((state) => state.addRole)
 	const handleIsLoggedIn = useUserStore((state) => state.handleIsLoggedIn)
 
-	const isLoggedIn = useUserStore((state) => state.isLoggedIn)
-
 	const useInput = (initialValue: any) => {
 		const [value, setValue] = useState(initialValue)
 		function handleChange(e: { target: { value: any } }) {
