@@ -82,10 +82,9 @@ const MCQQuestion = ({
 	const [startTime, setStartTime] = useState<string>('')
 	const [endTime, setEndTime] = useState<string>('')
 
-	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-		// @ts-ignore
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		let key = question.questionId
-		setAnswers({ ...answers, key: event.target.value as string })
+		setAnswers({ ...answers, [key]: (event.target as HTMLInputElement).value })
 	}
 
 	const submitCurrSelection = () => {
@@ -94,6 +93,7 @@ const MCQQuestion = ({
 			method: 'POST',
 			headers: {
 				Authorization: accessToken,
+				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
 				questionId: question.questionId,
@@ -112,8 +112,8 @@ const MCQQuestion = ({
 	useEffect(() => setStartTime(new Date().toISOString()), [])
 
 	return (
-		<Grid container style={{ height: '100%' }}>
-			<Grid item md={6} style={{ display: 'flex' }}>
+		<Grid container>
+			<Grid item md={6}>
 				<Paper className={classes.statement} variant='outlined'>
 					{/* @ts-ignore */}
 					<ReactMarkdown>{question.question.statement}</ReactMarkdown>
@@ -133,35 +133,50 @@ const MCQQuestion = ({
 								value={option}
 								control={<Radio />}
 								label={option}
-								onClick={() => submitCurrSelection}
+								onClick={() => submitCurrSelection()}
 							/>
 						))}
 					</RadioGroup>
 				</FormControl>
-				<Button variant='contained' color='primary' onClick={() => submitCurrSelection}>
+				<Button variant='contained' color='primary' onClick={() => submitCurrSelection()}>
 					Submit
 				</Button>
 			</Grid>
 		</Grid>
 	)
 }
+
 // @ts-ignore
 const CodingQuestion = ({
 	question,
 	answers,
 	setAnswers,
+	examId,
 }: {
 	question: QuestionData
 	answers: any
 	setAnswers: any
+	examId: string
 }) => {
 	const classes = useStyles()
 
+	const accessToken = useUserStore((state) => state.accessToken)
+	const candidateId = useUserStore((state) => state.username)
+
 	// @ts-ignore
-	const [currentLanguage, setCurrentLanguage] = useState<number>(question.question.languagesAccepted[0])
+	const [currentLanguage, setCurrentLanguage] = useState<number>(question.question.languagesAccepted[0].id)
+
+	// @ts-ignore
+	const [testCases, setTestCases] = useState<Array<any>>(question.question.testCases)
+
+	const [editorValue, setEditorValue] = useState('')
 
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 		setCurrentLanguage(event.target.value as number)
+	}
+
+	const handleEditorChange = (value: string, event: any) => {
+		setEditorValue(value)
 	}
 
 	useEffect(() => {
@@ -174,6 +189,70 @@ const CodingQuestion = ({
 		48: 'c',
 		71: 'python',
 		70: 'python',
+	}
+
+	const RunTestCase = ({ index, stdin, expectedOutput }: { index: number; stdin: any; expectedOutput: any }) => {
+		const [loading, setLoading] = useState(true)
+		const [result, setResult] = useState('')
+		const getResult = () => {
+			console.log(stdin, expectedOutput)
+			fetch(
+				`http://localhost:9000/candidate/submission?examId=${examId}&candidateId=${candidateId}&questionType=coding`,
+				{
+					method: 'POST',
+					headers: {
+						Authorization: accessToken,
+					},
+					body: JSON.stringify({
+						questionId: question.questionId,
+						language_id: currentLanguage,
+						code: window.btoa(editorValue),
+						stdin: window.btoa(stdin),
+						expectedOutput: window.btoa(expectedOutput),
+						submit: false,
+					}),
+				}
+			)
+				.then((response) => response.json())
+				.then((res) => {
+					console.log(res)
+					if (res.status_id === 3) {
+						setResult('Accepted')
+					} else {
+						setResult('Rejected')
+					}
+					setLoading(false)
+				})
+		}
+
+		useEffect(() => {
+			getResult()
+		}, [])
+		return (
+			<Paper style={{ width: '100%', display: 'flex', justifyItems: 'space-between' }}>
+				{`Test Case - ${index + 1}`}
+				{loading && <CircularProgress />}
+				{!loading && <Typography>{result}</Typography>}
+			</Paper>
+		)
+	}
+
+	const TestCases = () => {
+		return (
+			<List>
+				{testCases.map((val: { input: any; output: any }, index: number) => (
+					<ListItem>
+						<RunTestCase index={index} stdin={val.input} expectedOutput={val.output} />
+					</ListItem>
+				))}
+			</List>
+		)
+	}
+
+	const [running, setRunning] = useState(false)
+
+	const runTestCases = () => {
+		setRunning(true)
 	}
 
 	return (
@@ -199,7 +278,23 @@ const CodingQuestion = ({
 					))}
 				</select>
 				{/* @ts-ignore */}
-				<Editor height='100%' theme='vs-dark' defaultLanguage='java' language={languages[currentLanguage]} />
+				<Editor
+					height='100%'
+					theme='vs-dark'
+					defaultLanguage='cpp'
+					// @ts-ignore
+					language={languages[currentLanguage]}
+					value={editorValue}
+					// @ts-ignore
+					onChange={handleEditorChange}
+				/>
+				<Button variant='outlined' color='primary' onClick={() => runTestCases()}>
+					Run
+				</Button>
+				<Button variant='outlined' color='secondary' disabled>
+					Submit
+				</Button>
+				{running && <TestCases />}
 			</Grid>
 		</Grid>
 	)
@@ -241,7 +336,12 @@ const ExamLayout = ({ examDetails }: { examDetails: ExamDataAndQuestions }) => {
 					/>
 				)}
 				{currentQuestion.questionType === 'coding' && (
-					<CodingQuestion question={currentQuestion} answers={answers} setAnswers={setAnswers} />
+					<CodingQuestion
+						question={currentQuestion}
+						answers={answers}
+						setAnswers={setAnswers}
+						examId={examDetails.examId}
+					/>
 				)}
 			</Grid>
 		</Grid>
