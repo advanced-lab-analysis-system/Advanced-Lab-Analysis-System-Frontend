@@ -63,13 +63,14 @@ const dashboard = () => {
 	const classes = useStyles()
 
 	const accessToken = useUserStore((state) => state.accessToken)
+	const username = useUserStore((state) => state.username)
 	const isLoggedIn = useUserStore((state) => state.isLoggedIn)
 
 	const [upcomingExams, setUpcomingExams] = useState<ExamData[]>([])
 	const [endedExams, setEndedExams] = useState<ExamData[]>([])
 
 	const getExams = () => {
-		fetch('http://localhost:9000/candidate/exams', {
+		fetch(`http://localhost:9000/candidate/exams?candidateId==${username}`, {
 			method: 'GET',
 			headers: {
 				Authorization: accessToken,
