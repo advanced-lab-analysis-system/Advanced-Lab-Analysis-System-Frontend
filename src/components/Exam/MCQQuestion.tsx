@@ -107,7 +107,11 @@ const MCQQuestion = ({
 						))}
 					</RadioGroup>
 				</FormControl>
-				<Button variant='contained' color='primary' onClick={() => submitCurrSelection()}>
+				<Button
+					variant='contained'
+					color='secondary'
+					style={{ alignSelf: 'flex-end' }}
+					onClick={() => submitCurrSelection()}>
 					Submit
 				</Button>
 			</Grid>

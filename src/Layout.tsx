@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		flexDirection: 'column',
 		flex: 'auto',
+		height: '100%',
 	},
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,
@@ -20,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 	main: {
 		display: 'flex',
 		flexGrow: 1,
+		height: '100%',
 	},
 	title: {
 		flexGrow: 1,

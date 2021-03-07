@@ -8,6 +8,12 @@ import {
 	Divider,
 	Button,
 	makeStyles,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	TextField,
+	FilledInput,
 } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import useUserStore from '../../../store'
@@ -18,6 +24,16 @@ import ReactMarkdown from 'react-markdown'
 import Editor from '@monaco-editor/react'
 
 const useStyles = makeStyles((theme) => ({
+	gridSection: {
+		flexGrow: 1,
+		display: 'flex',
+		minHeight: 0,
+		flexWrap: 'nowrap',
+		height: '100%',
+	},
+	gridItemSection: {
+		display: 'flex',
+	},
 	statementSection: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -25,18 +41,33 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: theme.spacing(3),
 		marginBottom: theme.spacing(3),
 		padding: theme.spacing(1),
+
+		overflow: 'auto',
+		flexWrap: 'nowrap',
+		maxHeight: '84.5vh',
 	},
 	editorSection: {
-		// height: 'inherit',
-		// maxHeight: '100%',
-		padding: theme.spacing(3),
 		display: 'flex',
 		flexDirection: 'column',
-		justifyItems: 'flex-end',
+		alignItems: 'flex-end',
+
+		padding: theme.spacing(3),
+
+		maxHeight: '84.5vh',
+		flexGrow: 1,
+		overflow: 'auto',
+		minHeight: '100%',
+		flexWrap: 'nowrap',
 	},
 	editor: {
-		marginTop: theme.spacing(2),
+		marginTop: theme.spacing(1),
 		marginBottom: theme.spacing(2),
+	},
+	languageOptions: {
+		marginRight: theme.spacing(1),
+	},
+	runButton: {
+		marginRight: theme.spacing(2),
 	},
 }))
 
@@ -165,12 +196,15 @@ const CodingQuestion = ({
 	// @ts-ignore
 	const [currentLanguage, setCurrentLanguage] = useState<number>(question.question.languagesAccepted[0].id)
 
+	const [languagesAccepted, setLanguagesAccepted] = useState<Array<any>>([])
+
 	// @ts-ignore
 	const [testCases, setTestCases] = useState<Array<any>>(question.question.testCases)
 
 	const [editorValue, setEditorValue] = useState('')
 
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+		console.log(event.target)
 		setCurrentLanguage(event.target.value as number)
 	}
 
@@ -180,6 +214,14 @@ const CodingQuestion = ({
 
 	useEffect(() => {
 		console.log(answers, setAnswers)
+		let temp: React.SetStateAction<any[]> = []
+		// @ts-ignore
+		question.question.languagesAccepted.forEach((language) => {
+			// @ts-ignore
+			temp.push({ value: language.id, text: languages[language.id] })
+		})
+		setLanguagesAccepted(temp)
+		console.log(languagesAccepted)
 	}, [])
 
 	const languages = {
@@ -199,10 +241,10 @@ const CodingQuestion = ({
 		}
 		setRunTestCase(true)
 	}
-
+	// Considering shifting to Box for better control over the elements.
 	return (
-		<Grid container style={{ height: '100%' }}>
-			<Grid item md={4} style={{ display: 'flex' }}>
+		<Grid container className={classes.gridSection}>
+			<Grid item md={4} className={classes.gridItemSection}>
 				<Paper className={classes.statementSection} variant='outlined'>
 					<Typography variant='h6' component='h1'>
 						Statement
@@ -213,18 +255,26 @@ const CodingQuestion = ({
 				</Paper>
 			</Grid>
 			<Grid item md={8} className={classes.editorSection}>
-				<select name='Language' id='language' onChange={handleChange}>
-					{/* @ts-ignore */}
-					{question.question.languagesAccepted.map((language) => (
-						<>
-							{/* @ts-ignore */}
-							<option value={language.id}>{languages[language.id]}</option>
-						</>
-					))}
-				</select>
+				<FormControl variant='outlined' size='small' className={classes.languageOptions}>
+					<InputLabel id='language-option-label'>Language</InputLabel>
+					<Select
+						labelId='language-option-label'
+						id='language-option'
+						onChange={handleChange}
+						value={currentLanguage}
+						label='Language'>
+						{[
+							languagesAccepted.map((language) => (
+								<MenuItem key={`${language.text}-menuItem`} value={language.value}>
+									{language.text}
+								</MenuItem>
+							)),
+						]}
+					</Select>
+				</FormControl>
 				{/* @ts-ignore */}
 				<Editor
-					height='80%'
+					height='100%'
 					theme='vs-dark'
 					defaultLanguage='cpp'
 					// @ts-ignore
@@ -234,12 +284,18 @@ const CodingQuestion = ({
 					onChange={handleEditorChange}
 					className={classes.editor}
 				/>
-				<Button variant='outlined' color='primary' onClick={() => runTestCases()}>
-					Run
-				</Button>
-				<Button variant='outlined' color='secondary' disabled>
-					Submit
-				</Button>
+				<div>
+					<Button
+						variant='contained'
+						color='primary'
+						className={classes.runButton}
+						onClick={() => runTestCases()}>
+						Run
+					</Button>
+					<Button variant='contained' color='secondary'>
+						Submit
+					</Button>
+				</div>
 				{showTestCases && (
 					<TestCases
 						testCases={testCases}
@@ -257,3 +313,13 @@ const CodingQuestion = ({
 }
 
 export default CodingQuestion
+
+// <select name='Language' id='language' onChange={handleChange}>
+// 					{/* @ts-ignore */}
+// 					{question.question.languagesAccepted.map((language) => (
+// 						<>
+// 							{/* @ts-ignore */}
+// 							<option value={language.id}>{languages[language.id]}</option>
+// 						</>
+// 					))}
+// 				</select>
