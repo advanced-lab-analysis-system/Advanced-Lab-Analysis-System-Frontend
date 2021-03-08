@@ -34,6 +34,13 @@ const useStyles = makeStyles((theme) => ({
 const ExamTile = ({ exam }: { exam: ExamData }) => {
 	const classes = useStyles()
 
+	const inExam = useUserStore((state) => state.inExam)
+	const handleInExam = useUserStore((state) => state.handleInExam)
+
+	const startTest = () => {
+		handleInExam(true)
+	}
+
 	return (
 		<Paper className={classes.examTile} variant='outlined'>
 			<Grid container>
@@ -49,7 +56,7 @@ const ExamTile = ({ exam }: { exam: ExamData }) => {
 				</Grid>
 				<Grid item md={2}>
 					<Link href={`/exam/${encodeURIComponent(exam.examId)}`} passHref>
-						<Button variant='contained' color='primary'>
+						<Button variant='contained' color='primary' onClick={() => startTest()}>
 							{exam.status === 'upcoming' ? 'Start' : 'View'}
 						</Button>
 					</Link>

@@ -1,4 +1,5 @@
 import { AppBar, Button, makeStyles, Toolbar, Typography } from '@material-ui/core'
+import Router from 'next/router'
 import React, { ReactNode } from 'react'
 import useUserStore from '../store'
 
@@ -42,6 +43,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
 	const classes = useStyles()
 
 	const isLoggedIn = useUserStore((state) => state.isLoggedIn)
+	const inExam = useUserStore((state) => state.inExam)
+	const handleInExam = useUserStore((state) => state.handleInExam)
 	const clearUserData = useUserStore((state) => state.clearUserData)
 	return (
 		<div className={classes.root}>
@@ -51,7 +54,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
 						<Typography component='h1' variant='h6' color='inherit' noWrap className={classes.title}>
 							ALAS
 						</Typography>
-						{isLoggedIn && (
+						{isLoggedIn && !inExam && (
 							<Button
 								variant='contained'
 								color='secondary'
@@ -59,6 +62,17 @@ const Layout = ({ children }: { children: ReactNode }) => {
 									clearUserData()
 								}}>
 								Logout
+							</Button>
+						)}
+						{isLoggedIn && inExam && (
+							<Button
+								variant='contained'
+								color='secondary'
+								onClick={() => {
+									handleInExam(false)
+									Router.push('/dashboard')
+								}}>
+								End
 							</Button>
 						)}
 					</Toolbar>
