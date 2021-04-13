@@ -118,9 +118,9 @@ const exam = () => {
 		if (keycloak?.authenticated) fetchExamDetails()
 	}, [keycloak?.authenticated])
 
-	return (
-		<>
-			{loading && (
+	if (loading) {
+		return (
+			<Layout>
 				<CircularProgress
 					style={{
 						alignSelf: 'center',
@@ -128,14 +128,15 @@ const exam = () => {
 						marginLeft: 'auto',
 					}}
 				/>
-			)}
-			{!loading && (
-				<Layout>
-					<ExamLayout examDetails={examDetails} />
-				</Layout>
-			)}
-		</>
-	)
+			</Layout>
+		)
+	} else {
+		return (
+			<Layout>
+				<ExamLayout examDetails={examDetails} />
+			</Layout>
+		)
+	}
 }
 
 export default exam

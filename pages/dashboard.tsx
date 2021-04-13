@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../src/Layout'
 
-import Router from 'next/router'
-
 import {
 	Button,
-	CircularProgress,
 	Container,
 	Divider,
 	Grid,
@@ -13,6 +10,8 @@ import {
 	Paper,
 	Typography,
 } from '@material-ui/core'
+
+import { CircularProgress } from '@material-ui/core'
 
 import { ExamData } from '../src/types'
 import Link from '../src/Link'
@@ -44,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 const ExamTile = ({ exam }: { exam: ExamData }) => {
 	const classes = useStyles()
 
+	// @ts-ignore
 	const inExam = useExamStore((state) => state.inExam)
 	const handleInExam = useExamStore((state) => state.handleInExam)
 
@@ -118,36 +118,33 @@ const dashboard = () => {
 		if (keycloak?.authenticated) getExams()
 	}, [keycloak?.authenticated])
 
-	return (
-		<>
-			{keycloak?.authenticated && upcomingExams && endedExams && (
-				<Layout>
-					<Container maxWidth='md'>
-						<Typography variant='h4' className={classes.examHeader}>
-							Exams
-						</Typography>
-						<Divider />
-						<Typography
-							variant='h5'
-							className={classes.examSubheaders}>
-							Upcoming Exams
-						</Typography>
-						{upcomingExams.map((item: ExamData) => (
-							<ExamTile exam={item} />
-						))}
-						<Divider />
-						<Typography
-							variant='h5'
-							className={classes.examSubheaders}>
-							Ended Exams
-						</Typography>
-						{endedExams.map((item: ExamData) => (
-							<ExamTile exam={item} />
-						))}
-					</Container>
-				</Layout>
-			)}
-			{!keycloak?.authenticated && (
+	if (keycloak?.authenticated && upcomingExams && endedExams) {
+		return (
+			<Layout>
+				<Container maxWidth='md'>
+					<Typography variant='h4' className={classes.examHeader}>
+						Exams
+					</Typography>
+					<Divider />
+					<Typography variant='h5' className={classes.examSubheaders}>
+						Upcoming Exams
+					</Typography>
+					{upcomingExams.map((item: ExamData) => (
+						<ExamTile exam={item} />
+					))}
+					<Divider />
+					<Typography variant='h5' className={classes.examSubheaders}>
+						Ended Exams
+					</Typography>
+					{endedExams.map((item: ExamData) => (
+						<ExamTile exam={item} />
+					))}
+				</Container>
+			</Layout>
+		)
+	} else if (!keycloak?.authenticated) {
+		return (
+			<Layout>
 				<CircularProgress
 					style={{
 						alignSelf: 'center',
@@ -155,9 +152,9 @@ const dashboard = () => {
 						marginLeft: 'auto',
 					}}
 				/>
-			)}
-		</>
-	)
+			</Layout>
+		)
+	}
 }
 
 export default dashboard

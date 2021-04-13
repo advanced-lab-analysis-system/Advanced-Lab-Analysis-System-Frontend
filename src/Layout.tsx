@@ -1,7 +1,15 @@
-import { AppBar, Button, makeStyles, Toolbar, Typography } from '@material-ui/core'
+import {
+	AppBar,
+	Button,
+	makeStyles,
+	Toolbar,
+	Typography,
+} from '@material-ui/core'
+import { useKeycloak } from '@react-keycloak/ssr'
+import { KeycloakInstance } from 'keycloak-js'
 import Router from 'next/router'
 import React, { ReactNode } from 'react'
-import useUserStore from '../store'
+import { useExamStore } from '../store'
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -42,29 +50,34 @@ const useStyles = makeStyles((theme) => ({
 const Layout = ({ children }: { children: ReactNode }) => {
 	const classes = useStyles()
 
-	const isLoggedIn = useUserStore((state) => state.isLoggedIn)
-	const inExam = useUserStore((state) => state.inExam)
-	const handleInExam = useUserStore((state) => state.handleInExam)
-	const clearUserData = useUserStore((state) => state.clearUserData)
+	const { keycloak } = useKeycloak<KeycloakInstance>()
+
+	const inExam = useExamStore((state) => state.inExam)
+	const handleInExam = useExamStore((state) => state.handleInExam)
 	return (
 		<div className={classes.root}>
 			<header>
 				<AppBar position='fixed' className={classes.appBar}>
 					<Toolbar>
-						<Typography component='h1' variant='h6' color='inherit' noWrap className={classes.title}>
+						<Typography
+							component='h1'
+							variant='h6'
+							color='inherit'
+							noWrap
+							className={classes.title}>
 							ALAS
 						</Typography>
-						{isLoggedIn && !inExam && (
+						{keycloak?.authenticated && !inExam && (
 							<Button
 								variant='contained'
 								color='secondary'
 								onClick={() => {
-									clearUserData()
+									keycloak.logout()
 								}}>
 								Logout
 							</Button>
 						)}
-						{isLoggedIn && inExam && (
+						{keycloak?.authenticated && inExam && (
 							<Button
 								variant='contained'
 								color='secondary'

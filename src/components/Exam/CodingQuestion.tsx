@@ -233,6 +233,7 @@ const CodingQuestion = ({
 		setCurrentLanguage(event.target.value as number)
 	}
 
+	// @ts-ignore
 	const handleEditorChange = (value: string, event: any) => {
 		setEditorValue(value)
 	}
