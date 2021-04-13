@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/router'
-import Router from 'next/router'
 
-import useUserStore from '../../store'
-
-import { CircularProgress, makeStyles, Grid, Paper, List, ListItem, Button, Drawer, Toolbar } from '@material-ui/core'
+import {
+	CircularProgress,
+	makeStyles,
+	Grid,
+	Paper,
+	List,
+	ListItem,
+	Button,
+	Drawer,
+	Toolbar,
+} from '@material-ui/core'
 
 import { ExamDataAndQuestions, QuestionData } from '../../src/types'
 
 import Layout from '../../src/Layout'
 import MCQQuestion from '../../src/components/Exam/MCQQuestion'
 import CodingQuestion from '../../src/components/Exam/CodingQuestion'
+import { useKeycloak } from '@react-keycloak/ssr'
+import { KeycloakInstance } from 'keycloak-js'
 
 const useStyles = makeStyles((theme) => ({
 	main: {
@@ -37,14 +46,19 @@ const ExamLayout = ({ examDetails }: { examDetails: ExamDataAndQuestions }) => {
 			<Grid item md={1}>
 				<Drawer className={classes.drawer} variant='permanent'>
 					<Toolbar />
-					<Paper square variant='outlined' className={classes.questionList}>
+					<Paper
+						square
+						variant='outlined'
+						className={classes.questionList}>
 						<List>
 							{examDetails.questions.map((question, key) => (
 								<ListItem>
 									<Button
 										fullWidth
 										variant='outlined'
-										onClick={() => setCurrentQuestion(question)}>{`${key + 1}`}</Button>
+										onClick={() =>
+											setCurrentQuestion(question)
+										}>{`${key + 1}`}</Button>
 								</ListItem>
 							))}
 						</List>
@@ -77,21 +91,22 @@ const exam = () => {
 	const router = useRouter()
 	const { examId } = router.query
 
-	const accessToken = useUserStore((state) => state.accessToken)
-	const username = useUserStore((state) => state.username)
-	const isLoggedIn = useUserStore((state) => state.isLoggedIn)
+	const { keycloak } = useKeycloak<KeycloakInstance>()
 
 	// @ts-ignore
 	const [examDetails, setExamDetails] = useState<ExamDataAndQuestions>({})
 	const [loading, setLoading] = useState(true)
 
 	const fetchExamDetails = () => {
-		fetch(`http://localhost:9000/candidate/exams/${examId}?candidateId=${username}`, {
-			method: 'GET',
-			headers: {
-				Authorization: accessToken,
-			},
-		})
+		fetch(
+			`http://localhost:9000/candidate/exams/${examId}?candidateId=${keycloak?.subject}`,
+			{
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${keycloak?.token}`,
+				},
+			}
+		)
 			.then((response) => response.json())
 			.then((res) => {
 				setExamDetails(res)
@@ -100,13 +115,20 @@ const exam = () => {
 	}
 
 	useEffect(() => {
-		if (!isLoggedIn) Router.push('/auth/signin')
-		else fetchExamDetails()
-	}, [isLoggedIn])
+		if (keycloak?.authenticated) fetchExamDetails()
+	}, [keycloak?.authenticated])
 
 	return (
 		<>
-			{loading && <CircularProgress />}
+			{loading && (
+				<CircularProgress
+					style={{
+						alignSelf: 'center',
+						marginRight: 'auto',
+						marginLeft: 'auto',
+					}}
+				/>
+			)}
 			{!loading && (
 				<Layout>
 					<ExamLayout examDetails={examDetails} />

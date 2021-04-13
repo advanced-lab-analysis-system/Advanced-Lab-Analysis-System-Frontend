@@ -1,0 +1,15 @@
+{
+	"realm": "test",
+	"auth-server-url": "http://localhost:8080/auth/",
+	"ssl-required": "external",
+	"clientId": "next-js-client",
+	"public-client": true,
+	"confidential-port": 0
+}
+
+
+const keycloakCfg = {
+	realm: 'test',
+	url: 'http://localhost:8080/auth/',
+	clientId: 'next-js-client'
+  }

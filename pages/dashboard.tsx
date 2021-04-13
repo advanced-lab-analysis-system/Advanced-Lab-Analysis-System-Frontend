@@ -3,12 +3,22 @@ import Layout from '../src/Layout'
 
 import Router from 'next/router'
 
-import { Button, CircularProgress, Container, Divider, Grid, makeStyles, Paper, Typography } from '@material-ui/core'
-
-import useUserStore from '../store'
+import {
+	Button,
+	CircularProgress,
+	Container,
+	Divider,
+	Grid,
+	makeStyles,
+	Paper,
+	Typography,
+} from '@material-ui/core'
 
 import { ExamData } from '../src/types'
 import Link from '../src/Link'
+import { useKeycloak } from '@react-keycloak/ssr'
+import { KeycloakInstance } from 'keycloak-js'
+import { useExamStore } from '../store'
 
 const useStyles = makeStyles((theme) => ({
 	examTile: {
@@ -34,8 +44,8 @@ const useStyles = makeStyles((theme) => ({
 const ExamTile = ({ exam }: { exam: ExamData }) => {
 	const classes = useStyles()
 
-	const inExam = useUserStore((state) => state.inExam)
-	const handleInExam = useUserStore((state) => state.handleInExam)
+	const inExam = useExamStore((state) => state.inExam)
+	const handleInExam = useExamStore((state) => state.handleInExam)
 
 	const startTest = () => {
 		handleInExam(true)
@@ -55,8 +65,13 @@ const ExamTile = ({ exam }: { exam: ExamData }) => {
 					</Typography>
 				</Grid>
 				<Grid item md={2}>
-					<Link href={`/exam/${encodeURIComponent(exam.examId)}`} passHref>
-						<Button variant='contained' color='primary' onClick={() => startTest()}>
+					<Link
+						href={`/exam/${encodeURIComponent(exam.examId)}`}
+						passHref>
+						<Button
+							variant='contained'
+							color='primary'
+							onClick={() => startTest()}>
 							{exam.status === 'upcoming' ? 'Start' : 'View'}
 						</Button>
 					</Link>
@@ -69,24 +84,30 @@ const ExamTile = ({ exam }: { exam: ExamData }) => {
 const dashboard = () => {
 	const classes = useStyles()
 
-	const accessToken = useUserStore((state) => state.accessToken)
-	const username = useUserStore((state) => state.username)
-	const isLoggedIn = useUserStore((state) => state.isLoggedIn)
+	const { keycloak } = useKeycloak<KeycloakInstance>()
 
 	const [upcomingExams, setUpcomingExams] = useState<ExamData[]>([])
 	const [endedExams, setEndedExams] = useState<ExamData[]>([])
 
+	// TODO: change url according to REST API
 	const getExams = () => {
-		fetch(`http://localhost:9000/candidate/exams?candidateId==${username}`, {
-			method: 'GET',
-			headers: {
-				Authorization: accessToken,
-			},
-		})
+		fetch(
+			`http://localhost:9000/candidate/exams?candidateId==${keycloak?.subject}`,
+			{
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${keycloak?.token}`,
+				},
+			}
+		)
 			.then((response) => response.json())
 			.then((res) => {
 				res.map((element: ExamData) => {
-					if (element.status === 'upcoming') setUpcomingExams((upcomingExams) => [...upcomingExams, element])
+					if (element.status === 'upcoming')
+						setUpcomingExams((upcomingExams) => [
+							...upcomingExams,
+							element,
+						])
 					else setEndedExams((endedExams) => [...endedExams, element])
 				})
 				console.log(res)
@@ -94,27 +115,30 @@ const dashboard = () => {
 	}
 
 	useEffect(() => {
-		if (!isLoggedIn) Router.push('/auth/signin')
-		else getExams()
-	}, [isLoggedIn])
+		if (keycloak?.authenticated) getExams()
+	}, [keycloak?.authenticated])
 
 	return (
 		<>
-			{isLoggedIn && upcomingExams && endedExams && (
+			{keycloak?.authenticated && upcomingExams && endedExams && (
 				<Layout>
 					<Container maxWidth='md'>
 						<Typography variant='h4' className={classes.examHeader}>
 							Exams
 						</Typography>
 						<Divider />
-						<Typography variant='h5' className={classes.examSubheaders}>
+						<Typography
+							variant='h5'
+							className={classes.examSubheaders}>
 							Upcoming Exams
 						</Typography>
 						{upcomingExams.map((item: ExamData) => (
 							<ExamTile exam={item} />
 						))}
 						<Divider />
-						<Typography variant='h5' className={classes.examSubheaders}>
+						<Typography
+							variant='h5'
+							className={classes.examSubheaders}>
 							Ended Exams
 						</Typography>
 						{endedExams.map((item: ExamData) => (
@@ -123,7 +147,15 @@ const dashboard = () => {
 					</Container>
 				</Layout>
 			)}
-			{!isLoggedIn && <CircularProgress />}
+			{!keycloak?.authenticated && (
+				<CircularProgress
+					style={{
+						alignSelf: 'center',
+						marginRight: 'auto',
+						marginLeft: 'auto',
+					}}
+				/>
+			)}
 		</>
 	)
 }

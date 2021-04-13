@@ -14,12 +14,14 @@ import {
 	Select,
 } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
-import useUserStore from '../../../store'
+
 import { QuestionData } from '../../types'
 
 import ReactMarkdown from 'react-markdown'
 
 import Editor from '@monaco-editor/react'
+import { useKeycloak } from '@react-keycloak/ssr'
+import { KeycloakInstance } from 'keycloak-js'
 
 const useStyles = makeStyles((theme) => ({
 	gridSection: {
@@ -91,16 +93,15 @@ const RunTestCase = ({
 	const [loading, setLoading] = useState(true)
 	const [result, setResult] = useState('')
 
-	const accessToken = useUserStore((state) => state.accessToken)
-	const candidateId = useUserStore((state) => state.username)
+	const { keycloak } = useKeycloak<KeycloakInstance>()
 
 	const getResult = () => {
 		fetch(
-			`http://localhost:9000/candidate/submission?examId=${examId}&candidateId=${candidateId}&questionType=coding`,
+			`http://localhost:9000/candidate/submission?examId=${examId}&candidateId=${keycloak?.subject}&questionType=coding`,
 			{
 				method: 'POST',
 				headers: {
-					Authorization: accessToken,
+					Authorization: `Bearer ${keycloak?.token}`,
 				},
 				body: JSON.stringify({
 					questionId: question.questionId,
@@ -131,9 +132,23 @@ const RunTestCase = ({
 		}
 	}, [runTestCase])
 	return (
-		<Paper style={{ width: '100%', display: 'flex', justifyItems: 'space-between', padding: '5px' }}>
+		<Paper
+			style={{
+				width: '100%',
+				display: 'flex',
+				justifyItems: 'space-between',
+				padding: '5px',
+			}}>
 			{`Test Case - ${index + 1}`}
-			{loading && <CircularProgress />}
+			{loading && (
+				<CircularProgress
+					style={{
+						alignSelf: 'center',
+						marginRight: 'auto',
+						marginLeft: 'auto',
+					}}
+				/>
+			)}
 			{!loading && <Typography>{result}</Typography>}
 		</Paper>
 	)
@@ -158,20 +173,27 @@ const TestCases = ({
 }) => {
 	return (
 		<List style={{ width: '100%' }}>
-			{testCases.map((val: { input: any; output: any }, index: number) => (
-				<ListItem style={{ width: '100%', paddingLeft: '0', paddingRight: '0' }}>
-					<RunTestCase
-						index={index}
-						stdin={val.input}
-						expectedOutput={val.output}
-						question={question}
-						currentLanguage={currentLanguage}
-						editorValue={editorValue}
-						examId={examId}
-						runTestCase={runTestCase}
-					/>
-				</ListItem>
-			))}
+			{testCases.map(
+				(val: { input: any; output: any }, index: number) => (
+					<ListItem
+						style={{
+							width: '100%',
+							paddingLeft: '0',
+							paddingRight: '0',
+						}}>
+						<RunTestCase
+							index={index}
+							stdin={val.input}
+							expectedOutput={val.output}
+							question={question}
+							currentLanguage={currentLanguage}
+							editorValue={editorValue}
+							examId={examId}
+							runTestCase={runTestCase}
+						/>
+					</ListItem>
+				)
+			)}
 			{setRunTestCase(false)}
 		</List>
 	)
@@ -191,13 +213,18 @@ const CodingQuestion = ({
 }) => {
 	const classes = useStyles()
 
-	// @ts-ignore
-	const [currentLanguage, setCurrentLanguage] = useState<number>(question.question.languagesAccepted[0].id)
+	const [currentLanguage, setCurrentLanguage] = useState<number>(
+		// @ts-ignore
+		question.question.languagesAccepted[0].id
+	)
 
 	const [languagesAccepted, setLanguagesAccepted] = useState<Array<any>>([])
 
 	// @ts-ignore
-	const [testCases, setTestCases] = useState<Array<any>>(question.question.testCases)
+	const [testCases, setTestCases] = useState<Array<any>>(
+		// @ts-ignore
+		question.question.testCases
+	)
 
 	const [editorValue, setEditorValue] = useState('')
 
@@ -253,7 +280,10 @@ const CodingQuestion = ({
 				</Paper>
 			</Grid>
 			<Grid item md={8} className={classes.editorSection}>
-				<FormControl variant='outlined' size='small' className={classes.languageOptions}>
+				<FormControl
+					variant='outlined'
+					size='small'
+					className={classes.languageOptions}>
 					<InputLabel id='language-option-label'>Language</InputLabel>
 					<Select
 						labelId='language-option-label'
@@ -263,7 +293,9 @@ const CodingQuestion = ({
 						label='Language'>
 						{[
 							languagesAccepted.map((language) => (
-								<MenuItem key={`${language.text}-menuItem`} value={language.value}>
+								<MenuItem
+									key={`${language.text}-menuItem`}
+									value={language.value}>
 									{language.text}
 								</MenuItem>
 							)),

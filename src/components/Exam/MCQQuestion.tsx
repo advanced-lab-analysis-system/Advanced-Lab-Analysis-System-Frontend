@@ -10,10 +10,13 @@ import {
 	makeStyles,
 } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
-import useUserStore from '../../../store'
+
 import { QuestionData } from '../../types'
 
 import ReactMarkdown from 'react-markdown'
+
+import { useKeycloak } from '@react-keycloak/ssr'
+import { KeycloakInstance } from 'keycloak-js'
 
 const useStyles = makeStyles((theme) => ({
 	statement: {
@@ -45,32 +48,37 @@ const MCQQuestion = ({
 }) => {
 	const classes = useStyles()
 
-	const username = useUserStore((state) => state.username)
-	const accessToken = useUserStore((state) => state.accessToken)
+	const { keycloak } = useKeycloak<KeycloakInstance>()
 
 	const [startTime, setStartTime] = useState<string>('')
 	const [endTime, setEndTime] = useState<string>('')
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		let key = question.questionId
-		setAnswers({ ...answers, [key]: (event.target as HTMLInputElement).value })
+		setAnswers({
+			...answers,
+			[key]: (event.target as HTMLInputElement).value,
+		})
 	}
 
 	const submitCurrSelection = () => {
 		setEndTime(new Date().toISOString())
-		fetch(`http://localhost:9000/candidate/submission?examId=${examId}&candidateId=${username}&questionType=mcq`, {
-			method: 'POST',
-			headers: {
-				Authorization: accessToken,
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				questionId: question.questionId,
-				visitStartTime: startTime,
-				visitEndTime: endTime,
-				selectedAnswer: answers[question.questionId],
-			}),
-		})
+		fetch(
+			`http://localhost:9000/candidate/submission?examId=${examId}&candidateId=${keycloak?.subject}&questionType=mcq`,
+			{
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${keycloak?.token}`,
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					questionId: question.questionId,
+					visitStartTime: startTime,
+					visitEndTime: endTime,
+					selectedAnswer: answers[question.questionId],
+				}),
+			}
+		)
 			.then((response) => response.json())
 			.then((res) => {
 				console.log(res)

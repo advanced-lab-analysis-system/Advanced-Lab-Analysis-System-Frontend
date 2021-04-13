@@ -3,19 +3,26 @@ import React, { useEffect } from 'react'
 import Router from 'next/router'
 
 import Layout from '../src/Layout'
-import useUserStore from '../store'
 import { CircularProgress } from '@material-ui/core'
 
+import { useKeycloak } from '@react-keycloak/ssr'
+import type { KeycloakInstance } from 'keycloak-js'
+
 export default function Index() {
-	const isLoggedIn = useUserStore((state) => state.isLoggedIn)
+	const { keycloak } = useKeycloak<KeycloakInstance>()
 	useEffect(() => {
-		if (!isLoggedIn) Router.push('/auth/signin')
-		else Router.push('/dashboard')
-	}, [isLoggedIn])
+		if (keycloak?.authenticated) Router.push('/dashboard')
+	}, [keycloak?.authenticated])
 
 	return (
 		<Layout>
-			<CircularProgress />
+			<CircularProgress
+				style={{
+					alignSelf: 'center',
+					marginRight: 'auto',
+					marginLeft: 'auto',
+				}}
+			/>
 		</Layout>
 	)
 }
