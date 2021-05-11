@@ -1,3 +1,13 @@
+export type ModuleData = {
+	id: string
+	moduleName: string
+	moduleDescription: string
+	originalAuthor: string
+	authorList: Object
+	examList: Array<string>
+	batchList: Array<string>
+}
+
 export type ExamData = {
 	examId: string
 	batchId: string
