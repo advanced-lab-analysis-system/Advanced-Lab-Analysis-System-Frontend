@@ -16,12 +16,13 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 
 import theme from '../src/theme'
 import '../src/styles/globals.css'
+import { KeycloakConfig } from 'keycloak-js'
 
 interface InitialProps {
 	cookies: unknown
 }
 
-const keycloakCfg = {
+const keycloakCfg: KeycloakConfig = {
 	realm: 'test',
 	url: 'http://localhost:8080/auth/',
 	clientId: 'next-js-client',

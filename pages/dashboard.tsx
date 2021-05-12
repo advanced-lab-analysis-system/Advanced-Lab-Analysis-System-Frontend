@@ -50,10 +50,16 @@ const dashboard = () => {
 
 	const { keycloak } = useKeycloak<KeycloakInstance>()
 
+	const [loading, setLoading] = useState<boolean>(true)
+
+	const [roleList, setRoleList] = useState<Array<string> | null>(null)
+
+	const [currRole, setCurrRole] = useState<string | null>(null)
+
 	const [moduleIds, setModuleIds] = useState<Array<string>>([])
 
 	// TODO: change url according to REST API
-	const getModules = () => {
+	const getCandidateModules = () => {
 		fetch(`http://localhost:9000/candidate/modules`, {
 			method: 'GET',
 			headers: {
@@ -66,14 +72,83 @@ const dashboard = () => {
 					setModuleIds((moduleIds) => [...moduleIds, element])
 				})
 				console.log(res)
+				setLoading(false)
 			})
 	}
 
 	useEffect(() => {
-		if (keycloak?.authenticated) getModules()
+		if (keycloak?.authenticated) {
+			let origRoleList = keycloak.realmAccess?.roles
+			let newRoleList: Array<string> = []
+			// @ts-ignore
+			origRoleList.forEach((role) => {
+				if (role === 'CANDIDATE' || role === 'AUTHOR') {
+					newRoleList.push(role)
+				}
+			})
+			setRoleList(newRoleList)
+		}
 	}, [keycloak?.authenticated])
 
-	if (keycloak?.authenticated && moduleIds.length !== 0) {
+	useEffect(() => {
+		if (roleList !== null) {
+			if (roleList.length === 0) {
+				alert('not a valid account')
+			} else if (roleList.length > 1) {
+				setLoading(false)
+			} else {
+				setCurrRole(roleList[0])
+			}
+		}
+	}, [roleList])
+
+	useEffect(() => {
+		if (currRole !== null || currRole !== '') {
+			if (currRole === 'CANDIDATE') {
+				getCandidateModules()
+			} else if (currRole === 'AUTHOR') {
+			}
+		} else {
+			setLoading(true)
+		}
+	}, [currRole])
+
+	// TODO: need to split into separate module
+
+	if (
+		!loading &&
+		roleList !== null &&
+		roleList.length > 1 &&
+		currRole === null
+	) {
+		return (
+			<Layout>
+				<Grid container md>
+					{roleList.map((role) => (
+						<Grid
+							item
+							xs
+							style={{
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+							}}>
+							<Button
+								variant='contained'
+								color='secondary'
+								onClick={() => {
+									setCurrRole(role)
+								}}>
+								{role}
+							</Button>
+						</Grid>
+					))}
+				</Grid>
+			</Layout>
+		)
+	}
+
+	if (!loading && currRole === 'CANDIDATE' && moduleIds.length !== 0) {
 		return (
 			<Layout>
 				<Grid container md spacing={3} className={classes.moduleGrid}>
@@ -86,6 +161,7 @@ const dashboard = () => {
 			</Layout>
 		)
 	}
+
 	return (
 		<Layout>
 			<CircularProgress
