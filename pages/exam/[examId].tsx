@@ -98,15 +98,12 @@ const exam = () => {
 	const [loading, setLoading] = useState(true)
 
 	const fetchExamDetails = () => {
-		fetch(
-			`http://localhost:9000/candidate/exams/${examId}?candidateId=${keycloak?.subject}`,
-			{
-				method: 'GET',
-				headers: {
-					Authorization: `Bearer ${keycloak?.token}`,
-				},
-			}
-		)
+		fetch(`http://localhost:9000/candidate/exams/${examId}`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${keycloak?.token}`,
+			},
+		})
 			.then((response) => response.json())
 			.then((res) => {
 				setExamDetails(res)

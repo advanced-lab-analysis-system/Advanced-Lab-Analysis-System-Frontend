@@ -17,7 +17,7 @@ import { ModuleData } from '../src/types'
 import Link from '../src/Link'
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
-import { useExamStore } from '../store'
+import { useExamStore, useUserStore } from '../store'
 
 import Module from '../src/components/Module'
 
@@ -54,7 +54,10 @@ const dashboard = () => {
 
 	const [roleList, setRoleList] = useState<Array<string> | null>(null)
 
-	const [currRole, setCurrRole] = useState<string | null>(null)
+	// const [currRole, setCurrRole] = useState<string | null>(null)
+
+	const currRole = useUserStore((state) => state.currRole)
+	const setCurrRole = useUserStore((state) => state.setCurrRole)
 
 	const [moduleIds, setModuleIds] = useState<Array<string>>([])
 
@@ -148,7 +151,7 @@ const dashboard = () => {
 		)
 	}
 
-	if (!loading && currRole === 'CANDIDATE' && moduleIds.length !== 0) {
+	if (!loading && currRole === 'CANDIDATE') {
 		return (
 			<Layout>
 				<Grid container md spacing={3} className={classes.moduleGrid}>
@@ -157,6 +160,7 @@ const dashboard = () => {
 							<Module moduleId={moduleId}></Module>
 						</Grid>
 					))}
+					{moduleIds.length === 0 && <>No Modules to Display</>}
 				</Grid>
 			</Layout>
 		)

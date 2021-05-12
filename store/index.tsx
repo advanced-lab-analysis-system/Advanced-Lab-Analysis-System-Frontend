@@ -1,3 +1,5 @@
 import useExamStore from './ExamStore'
 
-export { useExamStore }
+import useUserStore from './UserStore'
+
+export { useExamStore, useUserStore }

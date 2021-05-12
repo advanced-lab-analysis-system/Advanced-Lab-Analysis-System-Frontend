@@ -11,6 +11,7 @@ import { ModuleData } from '../../types'
 
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
+import Link from '../../Link'
 
 const useStyles = makeStyles((theme) => ({
 	rootPaper: {
@@ -52,15 +53,17 @@ const index = ({ moduleId }: { moduleId: string }) => {
 
 	if (!loading) {
 		return (
-			<Button fullWidth onClick={() => {}}>
-				<Paper
-					className={classes.rootPaper}
-					onClick={() => console.log('module click')}>
-					<Typography variant='h4'>
-						{module?.moduleName.toUpperCase()}
-					</Typography>
-				</Paper>
-			</Button>
+			<Link href={`/module/${moduleId}`} passHref>
+				<Button fullWidth>
+					<Paper
+						className={classes.rootPaper}
+						onClick={() => console.log('module click')}>
+						<Typography variant='h4'>
+							{module?.moduleName.toUpperCase()}
+						</Typography>
+					</Paper>
+				</Button>
+			</Link>
 		)
 	}
 
