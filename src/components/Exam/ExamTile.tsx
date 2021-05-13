@@ -101,8 +101,11 @@ const ExamTile = ({ examId }: { examId: string }) => {
 							variant='contained'
 							color='primary'
 							size='medium'
+							disabled={examSummaryData?.status === 'upcoming'}
 							style={{ minWidth: '6.25em' }}>
-							Resume
+							{examSummaryData?.status === 'running'
+								? 'Start'
+								: 'View'}
 						</Button>
 					</Grid>
 				</Grid>

@@ -15,6 +15,7 @@ export type ExamDataSummary = {
 	examStartTime: Date
 	examEndTime: Date
 	authorId: string
+	status: string
 }
 
 export type CandidateExamData = {
