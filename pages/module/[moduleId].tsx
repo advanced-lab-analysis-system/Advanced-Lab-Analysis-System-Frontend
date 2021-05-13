@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
 	examsTitle: {
 		marginBottom: theme.spacing(1),
 	},
+	divider: {
+		marginBottom: theme.spacing(2),
+	},
 }))
 
 const modulePage = () => {
@@ -80,9 +83,20 @@ const modulePage = () => {
 						className={classes.examsTitle}>
 						Exams
 					</Typography>
-					<Divider />
+					<Divider className={classes.divider} />
 					{module?.examList.map((exam) => (
-						<ExamTile examId={exam} />
+						<>
+							<ExamTile examId={exam} />
+							<ExamTile examId={exam} />
+							<ExamTile examId={exam} />
+							<ExamTile examId={exam} />
+							<ExamTile examId={exam} />
+							<ExamTile examId={exam} />
+							<ExamTile examId={exam} />
+							<ExamTile examId={exam} />
+							<ExamTile examId={exam} />
+							<ExamTile examId={exam} />
+						</>
 					))}
 				</Container>
 			</Layout>

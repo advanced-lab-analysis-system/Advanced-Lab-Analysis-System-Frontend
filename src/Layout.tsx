@@ -33,7 +33,9 @@ const useStyles = makeStyles((theme) => ({
 		height: '100%',
 	},
 	title: {
-		flexGrow: 1,
+		// flexGrow: 1,
+		marginRight: 'auto',
+		fontSize: '1.75em',
 	},
 	footer: {
 		height: '50px',
@@ -59,14 +61,14 @@ const Layout = ({ children }: { children: ReactNode }) => {
 			<header>
 				<AppBar position='fixed' className={classes.appBar}>
 					<Toolbar>
-						<Typography
-							component='h1'
-							variant='h6'
+						<Button
+							variant='text'
 							color='inherit'
-							noWrap
-							className={classes.title}>
+							className={classes.title}
+							size='large'
+							onClick={() => Router.push('/dashboard')}>
 							ALAS
-						</Typography>
+						</Button>
 						{keycloak?.authenticated && !inExam && (
 							<Button
 								variant='contained'
