@@ -8,29 +8,25 @@ export type ModuleData = {
 	batchList: Array<string>
 }
 
-export type ExamData = {
-	examId: string
-	batchId: string
+export type ExamDataSummary = {
+	id: string
 	examName: string
-	subject: string
 	noOfQuestions: number
 	examStartTime: Date
 	examEndTime: Date
-	author: string
-	status: string
+	authorId: string
 }
 
-export type ExamDataAndQuestions = {
-	examId: string
-	batchId: string
+export type CandidateExamData = {
+	id: string
 	examName: string
-	subject: string
 	noOfQuestions: number
 	examStartTime: Date
 	examEndTime: Date
-	author: string
+	authorId: string
 	status: string
-	questions: Array<QuestionData>
+	questionList: Array<QuestionData>
+	timeRemaining: number
 }
 
 export type QuestionData = {
