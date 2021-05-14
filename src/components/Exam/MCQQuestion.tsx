@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 
-import { QuestionData } from '../../types'
+import { MCQQuestionData, QuestionData } from '../../types'
 
 import ReactMarkdown from 'react-markdown'
 
@@ -42,7 +42,7 @@ const MCQQuestion = ({
 	setAnswers,
 }: {
 	examId: string
-	question: QuestionData
+	question: MCQQuestionData
 	answers: any
 	setAnswers: any
 }) => {
@@ -93,7 +93,7 @@ const MCQQuestion = ({
 			<Grid item md={6}>
 				<Paper className={classes.statement} variant='outlined'>
 					{/* @ts-ignore */}
-					<ReactMarkdown>{question.question.statement}</ReactMarkdown>
+					<ReactMarkdown>{question.statement}</ReactMarkdown>
 				</Paper>
 			</Grid>
 			<Grid item md={6} className={classes.mcqOptions}>
@@ -105,7 +105,7 @@ const MCQQuestion = ({
 						value={answers[question.questionId]}
 						onChange={handleChange}>
 						{/* @ts-ignore */}
-						{question.question.options.map((option) => (
+						{question.options.map((option) => (
 							<FormControlLabel
 								value={option}
 								control={<Radio />}

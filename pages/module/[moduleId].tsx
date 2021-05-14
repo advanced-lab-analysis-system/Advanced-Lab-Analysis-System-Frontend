@@ -85,18 +85,7 @@ const modulePage = () => {
 					</Typography>
 					<Divider className={classes.divider} />
 					{module?.examList.map((exam) => (
-						<>
-							<ExamTile examId={exam} />
-							<ExamTile examId={exam} />
-							<ExamTile examId={exam} />
-							<ExamTile examId={exam} />
-							<ExamTile examId={exam} />
-							<ExamTile examId={exam} />
-							<ExamTile examId={exam} />
-							<ExamTile examId={exam} />
-							<ExamTile examId={exam} />
-							<ExamTile examId={exam} />
-						</>
+						<ExamTile examId={exam} />
 					))}
 				</Container>
 			</Layout>

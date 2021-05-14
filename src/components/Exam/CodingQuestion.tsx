@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 
-import { QuestionData } from '../../types'
+import { CodingQuestionData, QuestionData } from '../../types'
 
 import ReactMarkdown from 'react-markdown'
 
@@ -84,7 +84,7 @@ const RunTestCase = ({
 	index: number
 	stdin: any
 	expectedOutput: any
-	question: any
+	question: CodingQuestionData
 	currentLanguage: number
 	editorValue: string
 	examId: string
@@ -97,7 +97,7 @@ const RunTestCase = ({
 
 	const getResult = () => {
 		fetch(
-			`http://localhost:9000/candidate/submission?examId=${examId}&candidateId=${keycloak?.subject}&questionType=coding`,
+			`http://localhost:9000/candidate/submission?examId=${examId}&questionType=coding`,
 			{
 				method: 'POST',
 				headers: {
@@ -128,7 +128,7 @@ const RunTestCase = ({
 	useEffect(() => {
 		if (runTestCase) {
 			setLoading(true)
-			getResult()
+			// getResult()
 		}
 	}, [runTestCase])
 	return (
@@ -165,7 +165,7 @@ const TestCases = ({
 }: {
 	testCases: Array<any>
 	setRunTestCase: any
-	question: any
+	question: CodingQuestionData
 	currentLanguage: number
 	editorValue: string
 	examId: string
@@ -206,7 +206,7 @@ const CodingQuestion = ({
 	setAnswers,
 	examId,
 }: {
-	question: QuestionData
+	question: CodingQuestionData
 	answers: any
 	setAnswers: any
 	examId: string
@@ -215,7 +215,7 @@ const CodingQuestion = ({
 
 	const [currentLanguage, setCurrentLanguage] = useState<number>(
 		// @ts-ignore
-		question.question.languagesAccepted[0].id
+		question.languagesAccepted[0].id
 	)
 
 	const [languagesAccepted, setLanguagesAccepted] = useState<Array<any>>([])
@@ -223,7 +223,7 @@ const CodingQuestion = ({
 	// @ts-ignore
 	const [testCases, setTestCases] = useState<Array<any>>(
 		// @ts-ignore
-		question.question.testCases
+		question.testCases
 	)
 
 	const [editorValue, setEditorValue] = useState('')
@@ -242,7 +242,7 @@ const CodingQuestion = ({
 		console.log(answers, setAnswers)
 		let temp: React.SetStateAction<any[]> = []
 		// @ts-ignore
-		question.question.languagesAccepted.forEach((language) => {
+		question.languagesAccepted.forEach((language) => {
 			// @ts-ignore
 			temp.push({ value: language.id, text: languages[language.id] })
 		})
@@ -277,7 +277,7 @@ const CodingQuestion = ({
 					</Typography>
 					<Divider />
 					{/* @ts-ignore */}
-					<ReactMarkdown>{question.question.statement}</ReactMarkdown>
+					<ReactMarkdown>{question.statement}</ReactMarkdown>
 				</Paper>
 			</Grid>
 			<Grid item md={8} className={classes.editorSection}>
@@ -344,13 +344,3 @@ const CodingQuestion = ({
 }
 
 export default CodingQuestion
-
-// <select name='Language' id='language' onChange={handleChange}>
-// 					{/* @ts-ignore */}
-// 					{question.question.languagesAccepted.map((language) => (
-// 						<>
-// 							{/* @ts-ignore */}
-// 							<option value={language.id}>{languages[language.id]}</option>
-// 						</>
-// 					))}
-// 				</select>

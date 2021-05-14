@@ -30,8 +30,23 @@ export type CandidateExamData = {
 	timeRemaining: number
 }
 
-export type QuestionData = {
+export interface QuestionData {
 	questionId: string
 	questionType: string
-	question: Object
+	statement: string
+}
+
+export interface MCQQuestionData extends QuestionData {
+	options: Array<string>
+}
+
+export interface CodingQuestionData extends QuestionData {
+	languagesAccepted: Array<Language>
+	timeLimit: number
+	memoryLimit: number
+}
+
+export interface Language {
+	id: number
+	name: string
 }

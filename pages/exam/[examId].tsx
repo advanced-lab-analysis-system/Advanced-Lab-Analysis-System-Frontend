@@ -14,7 +14,12 @@ import {
 	Toolbar,
 } from '@material-ui/core'
 
-import { ExamDataAndQuestions, QuestionData } from '../../src/types'
+import {
+	CandidateExamData,
+	CodingQuestionData,
+	MCQQuestionData,
+	QuestionData,
+} from '../../src/types'
 
 import Layout from '../../src/Layout'
 import MCQQuestion from '../../src/components/Exam/MCQQuestion'
@@ -34,57 +39,81 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const ExamLayout = ({ examDetails }: { examDetails: ExamDataAndQuestions }) => {
+const ExamLayout = ({ examDetails }: { examDetails: CandidateExamData }) => {
 	const classes = useStyles()
-	// @ts-ignore
-	const [currentQuestion, setCurrentQuestion] = useState<QuestionData>({})
+	const [currentQuestion, setCurrentQuestion] = useState<
+		QuestionData | MCQQuestionData | CodingQuestionData
+		// @ts-ignore
+	>({})
 	// @ts-ignore
 	const [answers, setAnswers] = useState({})
 
-	return (
-		<Grid container>
-			<Grid item md={1}>
-				<Drawer className={classes.drawer} variant='permanent'>
-					<Toolbar />
-					<Paper
-						square
-						variant='outlined'
-						className={classes.questionList}>
-						<List>
-							{examDetails.questions.map((question, key) => (
-								<ListItem>
-									<Button
-										fullWidth
-										variant='outlined'
-										onClick={() =>
-											setCurrentQuestion(question)
-										}>{`${key + 1}`}</Button>
-								</ListItem>
-							))}
-						</List>
-					</Paper>
-				</Drawer>
+	const [loading, setLoading] = useState(true)
+
+	useEffect(() => {
+		setCurrentQuestion(examDetails.questionList[0])
+	}, [])
+
+	useEffect(() => {
+		if (currentQuestion !== undefined) setLoading(false)
+	}, [currentQuestion])
+
+	if (!loading) {
+		return (
+			<Grid container>
+				<Grid item md={1}>
+					<Drawer className={classes.drawer} variant='permanent'>
+						<Toolbar />
+						<Paper
+							square
+							variant='outlined'
+							className={classes.questionList}>
+							<List>
+								{examDetails.questionList.map(
+									(question, key) => (
+										<ListItem>
+											<Button
+												fullWidth
+												color='primary'
+												variant={
+													currentQuestion === question
+														? 'contained'
+														: 'outlined'
+												}
+												onClick={() =>
+													setCurrentQuestion(question)
+												}>{`${key + 1}`}</Button>
+										</ListItem>
+									)
+								)}
+							</List>
+						</Paper>
+					</Drawer>
+				</Grid>
+				<Grid item md={11}>
+					{currentQuestion.questionType === 'mcq' && (
+						<MCQQuestion
+							// @ts-ignore
+							question={currentQuestion}
+							answers={answers}
+							setAnswers={setAnswers}
+							examId={examDetails.id}
+						/>
+					)}
+					{currentQuestion.questionType === 'coding' && (
+						<CodingQuestion
+							// @ts-ignore
+							question={currentQuestion}
+							answers={answers}
+							setAnswers={setAnswers}
+							examId={examDetails.id}
+						/>
+					)}
+				</Grid>
 			</Grid>
-			<Grid item md={11}>
-				{currentQuestion.questionType === 'mcq' && (
-					<MCQQuestion
-						question={currentQuestion}
-						answers={answers}
-						setAnswers={setAnswers}
-						examId={examDetails.examId}
-					/>
-				)}
-				{currentQuestion.questionType === 'coding' && (
-					<CodingQuestion
-						question={currentQuestion}
-						answers={answers}
-						setAnswers={setAnswers}
-						examId={examDetails.examId}
-					/>
-				)}
-			</Grid>
-		</Grid>
-	)
+		)
+	}
+	return <></>
 }
 
 const exam = () => {
@@ -94,18 +123,19 @@ const exam = () => {
 	const { keycloak } = useKeycloak<KeycloakInstance>()
 
 	// @ts-ignore
-	const [examDetails, setExamDetails] = useState<ExamDataAndQuestions>({})
+	const [examDetails, setExamDetails] = useState<CandidateExamData>({})
 	const [loading, setLoading] = useState(true)
 
 	const fetchExamDetails = () => {
-		fetch(`http://localhost:9000/candidate/exams/${examId}`, {
+		fetch(`http://localhost:9000/candidate/exam/${examId}`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${keycloak?.token}`,
 			},
 		})
 			.then((response) => response.json())
-			.then((res) => {
+			.then((res: CandidateExamData) => {
+				console.log(res)
 				setExamDetails(res)
 				setLoading(false)
 			})

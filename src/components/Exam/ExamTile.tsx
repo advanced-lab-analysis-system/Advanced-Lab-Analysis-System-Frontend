@@ -8,8 +8,9 @@ import {
 } from '@material-ui/core'
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
+import Router from 'next/router'
 import React, { useState, useEffect } from 'react'
-import { ExamDataSummary, ModuleData } from '../../types'
+import { ExamDataSummary } from '../../types'
 
 const useStyles = makeStyles((theme) => ({
 	rootPaper: {
@@ -42,8 +43,9 @@ const ExamTile = ({ examId }: { examId: string }) => {
 		})
 			.then((response) => response.json())
 			.then((res: ExamDataSummary) => {
-				res.examStartTime = new Date(res.examStartTime + 'Z')
-				res.examEndTime = new Date(res.examEndTime + 'Z')
+				console.log(res)
+				res.examStartTime = new Date(res.examStartTime)
+				res.examEndTime = new Date(res.examEndTime)
 				setExamSummaryData(res)
 			})
 	}
@@ -67,8 +69,7 @@ const ExamTile = ({ examId }: { examId: string }) => {
 					<Grid
 						item
 						xs={4}
-						style={{ display: 'flex' }}
-						alignItems='center'>
+						style={{ display: 'flex', alignItems: 'center' }}>
 						<Typography variant='h6' noWrap color='primary'>
 							{examSummaryData?.examName}
 						</Typography>
@@ -76,8 +77,7 @@ const ExamTile = ({ examId }: { examId: string }) => {
 					<Grid
 						item
 						xs={2}
-						style={{ display: 'flex' }}
-						alignItems='center'>
+						style={{ display: 'flex', alignItems: 'center' }}>
 						<Typography variant='h6'>
 							{`${examSummaryData?.noOfQuestions} Question(s)`}
 						</Typography>
@@ -85,14 +85,14 @@ const ExamTile = ({ examId }: { examId: string }) => {
 					<Grid
 						item
 						xs={4}
-						style={{ display: 'flex' }}
-						alignItems='center'>
+						style={{ display: 'flex', alignItems: 'center' }}>
 						<Typography variant='body1' color='primary'>
-							{`${examSummaryData?.examStartTime.toLocaleString()} - ${examSummaryData?.examStartTime.toLocaleString()}`}
+							{`${examSummaryData?.examStartTime.toLocaleString()} - ${examSummaryData?.examEndTime.toLocaleString()}`}
 						</Typography>
 					</Grid>
 					<Grid
 						xs={2}
+						item
 						style={{
 							display: 'flex',
 							justifyContent: 'flex-end',
@@ -102,7 +102,8 @@ const ExamTile = ({ examId }: { examId: string }) => {
 							color='primary'
 							size='medium'
 							disabled={examSummaryData?.status === 'upcoming'}
-							style={{ minWidth: '6.25em' }}>
+							style={{ minWidth: '6.25em' }}
+							onClick={() => Router.push(`/exam/${examId}`)}>
 							{examSummaryData?.status === 'running'
 								? 'Start'
 								: 'View'}
