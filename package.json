@@ -5,8 +5,10 @@
 	"dependencies": {
 		"@material-ui/core": "latest",
 		"@material-ui/icons": "latest",
+		"@material-ui/pickers": "^3.3.10",
 		"@monaco-editor/react": "^4.0.5",
 		"@react-keycloak/ssr": "^3.3.0",
+		"@uiw/react-md-editor": "^3.0.8",
 		"clsx": "latest",
 		"cookie": "^0.4.1",
 		"keycloak-js": "^12.0.4",

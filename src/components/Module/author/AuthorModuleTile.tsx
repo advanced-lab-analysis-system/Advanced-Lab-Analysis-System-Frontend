@@ -6,9 +6,10 @@ import {
 	Button,
 } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
-import { ModuleData } from '../../types'
+import { ModuleData } from '../../../types'
 
-import Link from '../../Link'
+import Link from '../../../Link'
+import Loading from '../../Loading'
 
 const useStyles = makeStyles((theme) => ({
 	rootPaper: {
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const AuthorModule = ({ moduleData }: { moduleData: ModuleData }) => {
+const AuthorModuleTile = ({ moduleData }: { moduleData: ModuleData }) => {
 	const classes = useStyles()
 
 	const [loading, setLoading] = useState<boolean>(true)
@@ -52,15 +53,9 @@ const AuthorModule = ({ moduleData }: { moduleData: ModuleData }) => {
 
 	return (
 		<Paper className={classes.rootPaper}>
-			<CircularProgress
-				style={{
-					alignSelf: 'center',
-					marginRight: 'auto',
-					marginLeft: 'auto',
-				}}
-			/>
+			<Loading />
 		</Paper>
 	)
 }
 
-export default AuthorModule
+export default AuthorModuleTile

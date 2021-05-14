@@ -11,6 +11,7 @@ import { KeycloakInstance } from 'keycloak-js'
 import Router from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { ExamDataSummary } from '../../types'
+import Loading from '../Loading'
 
 const useStyles = makeStyles((theme) => ({
 	rootPaper: {
@@ -115,13 +116,7 @@ const ExamTile = ({ examId }: { examId: string }) => {
 	}
 	return (
 		<Paper className={classes.rootPaper}>
-			<CircularProgress
-				style={{
-					alignSelf: 'center',
-					marginRight: 'auto',
-					marginLeft: 'auto',
-				}}
-			/>
+			<Loading />
 		</Paper>
 	)
 }

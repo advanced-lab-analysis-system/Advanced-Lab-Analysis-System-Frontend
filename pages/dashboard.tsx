@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../src/Layout'
 
-import { CircularProgress } from '@material-ui/core'
-
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
 import { useUserStore } from '../store'
@@ -10,6 +8,7 @@ import { useUserStore } from '../store'
 import CandidateDashboard from '../src/components/Dashboard/CandidateDashboard'
 import RoleChoice from '../src/components/Dashboard/RoleChoice'
 import AuthorDashboard from '../src/components/Dashboard/AuthorDashboard'
+import Loading from '../src/components/Loading'
 
 const dashboard = () => {
 	const { keycloak } = useKeycloak<KeycloakInstance>()
@@ -63,13 +62,7 @@ const dashboard = () => {
 
 	return (
 		<Layout>
-			<CircularProgress
-				style={{
-					alignSelf: 'center',
-					marginRight: 'auto',
-					marginLeft: 'auto',
-				}}
-			/>
+			<Loading />
 		</Layout>
 	)
 }

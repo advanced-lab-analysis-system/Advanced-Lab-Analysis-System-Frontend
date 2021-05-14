@@ -8,6 +8,15 @@ export type ModuleData = {
 	batchList: Array<string>
 }
 
+export type Batch = {
+	id: string
+	batchName: string
+	batchDescription: string
+	moduleList: Array<string>
+	candidateList: Array<string>
+	status: string
+}
+
 export type ExamDataSummary = {
 	id: string
 	examName: string

@@ -1,4 +1,4 @@
-import CandidateModule from './CandidateModule'
-import AuthorModule from './AuthorModule'
+import CandidateModuleTile from './candidate/CandidateModuleTile'
+import AuthorModuleTile from './author/AuthorModuleTile'
 
-export { CandidateModule, AuthorModule }
+export { CandidateModuleTile, AuthorModuleTile }

@@ -1,14 +1,20 @@
-import { Grid, CircularProgress, makeStyles } from '@material-ui/core'
+import { Grid, CircularProgress, makeStyles, Button } from '@material-ui/core'
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
+import Router from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Layout from '../../Layout'
 import { ModuleData } from '../../types'
-import { AuthorModule } from '../Module'
+import Loading from '../Loading'
+import { AuthorModuleTile } from '../Module'
 
 const useStyles = makeStyles((theme) => ({
 	moduleGrid: {
 		padding: theme.spacing(3),
+	},
+	createModule: {
+		marginTop: theme.spacing(4),
+		marginLeft: theme.spacing(4),
 	},
 }))
 
@@ -53,14 +59,35 @@ const AuthorDashboard = () => {
 		if (modules.length !== 0)
 			return (
 				<Layout>
-					<Grid container spacing={3} className={classes.moduleGrid}>
-						{modules.map((moduleData) => (
-							<Grid item md={3} sm={6} xs={12}>
-								<AuthorModule
-									moduleData={moduleData}></AuthorModule>
-							</Grid>
-						))}
-					</Grid>
+					<div
+						style={{
+							display: 'flex',
+							flexGrow: 1,
+							height: '100%',
+							flexDirection: 'column',
+						}}>
+						<div className={classes.createModule}>
+							<Button
+								variant='outlined'
+								color='primary'
+								onClick={() => Router.push('/module')}>
+								Create Module
+							</Button>
+						</div>
+						<Grid
+							container
+							spacing={3}
+							className={classes.moduleGrid}>
+							{modules.map((moduleData) => (
+								<Grid item md={3} sm={6} xs={12}>
+									<AuthorModuleTile
+										moduleData={
+											moduleData
+										}></AuthorModuleTile>
+								</Grid>
+							))}
+						</Grid>
+					</div>
 				</Layout>
 			)
 		else
@@ -72,13 +99,7 @@ const AuthorDashboard = () => {
 	}
 	return (
 		<Layout>
-			<CircularProgress
-				style={{
-					alignSelf: 'center',
-					marginRight: 'auto',
-					marginLeft: 'auto',
-				}}
-			/>
+			<Loading />
 		</Layout>
 	)
 }

@@ -3,7 +3,8 @@ import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
 import React, { useState, useEffect } from 'react'
 import Layout from '../../Layout'
-import { CandidateModule } from '../Module'
+import Loading from '../Loading'
+import { CandidateModuleTile } from '../Module'
 
 const useStyles = makeStyles((theme) => ({
 	moduleGrid: {
@@ -55,8 +56,8 @@ const CandidateDashboard = () => {
 					<Grid container spacing={3} className={classes.moduleGrid}>
 						{moduleIds.map((moduleId) => (
 							<Grid item md={3} sm={6} xs={12}>
-								<CandidateModule
-									moduleId={moduleId}></CandidateModule>
+								<CandidateModuleTile
+									moduleId={moduleId}></CandidateModuleTile>
 							</Grid>
 						))}
 					</Grid>
@@ -71,13 +72,7 @@ const CandidateDashboard = () => {
 	}
 	return (
 		<Layout>
-			<CircularProgress
-				style={{
-					alignSelf: 'center',
-					marginRight: 'auto',
-					marginLeft: 'auto',
-				}}
-			/>
+			<Loading />
 		</Layout>
 	)
 }

@@ -11,8 +11,10 @@ import { KeycloakInstance } from 'keycloak-js'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import ExamTile from '../../src/components/Exam/ExamTile'
+import Loading from '../../src/components/Loading'
 import Layout from '../../src/Layout'
 import { ModuleData } from '../../src/types'
+import { useUserStore } from '../../store'
 
 const useStyles = makeStyles((theme) => ({
 	moduleName: {
@@ -38,6 +40,8 @@ const modulePage = () => {
 	const [loading, setLoading] = useState<boolean>(true)
 
 	const { keycloak } = useKeycloak<KeycloakInstance>()
+
+	const currRole = useUserStore((state) => state.currRole)
 
 	const classes = useStyles()
 
@@ -93,13 +97,7 @@ const modulePage = () => {
 	}
 	return (
 		<Layout>
-			<CircularProgress
-				style={{
-					alignSelf: 'center',
-					marginRight: 'auto',
-					marginLeft: 'auto',
-				}}
-			/>
+			<Loading />
 		</Layout>
 	)
 }
