@@ -1,83 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../src/Layout'
 
-import {
-	Button,
-	Container,
-	Divider,
-	Grid,
-	makeStyles,
-	Paper,
-	Typography,
-} from '@material-ui/core'
-
 import { CircularProgress } from '@material-ui/core'
 
-import { ModuleData } from '../src/types'
-import Link from '../src/Link'
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
-import { useExamStore, useUserStore } from '../store'
+import { useUserStore } from '../store'
 
-import Module from '../src/components/Module'
-
-const useStyles = makeStyles((theme) => ({
-	moduleGrid: {
-		padding: theme.spacing(3),
-	},
-	examTile: {
-		margin: theme.spacing(2),
-		padding: theme.spacing(2),
-		display: 'flex',
-		justifyContent: 'space-between',
-	},
-	tileText: {
-		display: 'flex',
-		alignItems: 'center',
-	},
-	examHeader: {
-		marginTop: theme.spacing(3),
-		marginBottom: theme.spacing(3),
-	},
-	examSubheaders: {
-		marginTop: theme.spacing(2),
-		marginBottom: theme.spacing(2),
-	},
-}))
+import CandidateDashboard from '../src/components/Dashboard/CandidateDashboard'
+import RoleChoice from '../src/components/Dashboard/RoleChoice'
 
 const dashboard = () => {
-	const classes = useStyles()
-
 	const { keycloak } = useKeycloak<KeycloakInstance>()
 
 	const [loading, setLoading] = useState<boolean>(true)
 
 	const [roleList, setRoleList] = useState<Array<string> | null>(null)
 
-	// const [currRole, setCurrRole] = useState<string | null>(null)
-
 	const currRole = useUserStore((state) => state.currRole)
 	const setCurrRole = useUserStore((state) => state.setCurrRole)
-
-	const [moduleIds, setModuleIds] = useState<Array<string>>([])
-
-	// TODO: change url according to REST API
-	const getCandidateModules = () => {
-		fetch(`http://localhost:9000/candidate/modules`, {
-			method: 'GET',
-			headers: {
-				Authorization: `Bearer ${keycloak?.token}`,
-			},
-		})
-			.then((response) => response.json())
-			.then((res) => {
-				res.map((element: string) => {
-					setModuleIds((moduleIds) => [...moduleIds, element])
-				})
-				console.log(res)
-				setLoading(false)
-			})
-	}
 
 	useEffect(() => {
 		if (keycloak?.authenticated) {
@@ -105,17 +46,6 @@ const dashboard = () => {
 		}
 	}, [roleList])
 
-	useEffect(() => {
-		if (currRole !== null || currRole !== '') {
-			if (currRole === 'CANDIDATE') {
-				getCandidateModules()
-			} else if (currRole === 'AUTHOR') {
-			}
-		} else {
-			setLoading(true)
-		}
-	}, [currRole])
-
 	// TODO: need to split into separate module
 
 	if (
@@ -123,48 +53,10 @@ const dashboard = () => {
 		roleList !== null &&
 		roleList.length > 1 &&
 		currRole === null
-	) {
-		return (
-			<Layout>
-				<Grid container md>
-					{roleList.map((role) => (
-						<Grid
-							item
-							xs
-							style={{
-								display: 'flex',
-								justifyContent: 'center',
-								alignItems: 'center',
-							}}>
-							<Button
-								variant='contained'
-								color='secondary'
-								onClick={() => {
-									setCurrRole(role)
-								}}>
-								{role}
-							</Button>
-						</Grid>
-					))}
-				</Grid>
-			</Layout>
-		)
-	}
+	)
+		return <RoleChoice roleList={roleList} setCurrRole={setCurrRole} />
 
-	if (!loading && currRole === 'CANDIDATE') {
-		return (
-			<Layout>
-				<Grid container md spacing={3} className={classes.moduleGrid}>
-					{moduleIds.map((moduleId) => (
-						<Grid item md={3} sm={6} xs={12}>
-							<Module moduleId={moduleId}></Module>
-						</Grid>
-					))}
-					{moduleIds.length === 0 && <>No Modules to Display</>}
-				</Grid>
-			</Layout>
-		)
-	}
+	if (currRole === 'CANDIDATE') return <CandidateDashboard />
 
 	return (
 		<Layout>

@@ -26,6 +26,7 @@ import MCQQuestion from '../../src/components/Exam/MCQQuestion'
 import CodingQuestion from '../../src/components/Exam/CodingQuestion'
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
+import { useExamStore } from '../../store'
 
 const useStyles = makeStyles((theme) => ({
 	main: {
@@ -122,6 +123,8 @@ const exam = () => {
 
 	const { keycloak } = useKeycloak<KeycloakInstance>()
 
+	const handleInExam = useExamStore((state) => state.handleInExam)
+
 	// @ts-ignore
 	const [examDetails, setExamDetails] = useState<CandidateExamData>({})
 	const [loading, setLoading] = useState(true)
@@ -142,7 +145,10 @@ const exam = () => {
 	}
 
 	useEffect(() => {
-		if (keycloak?.authenticated) fetchExamDetails()
+		if (keycloak?.authenticated) {
+			fetchExamDetails()
+			handleInExam(true)
+		}
 	}, [keycloak?.authenticated])
 
 	if (loading) {
