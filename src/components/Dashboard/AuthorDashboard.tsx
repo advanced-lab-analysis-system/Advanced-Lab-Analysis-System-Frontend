@@ -1,9 +1,10 @@
-import { CircularProgress, Grid, makeStyles } from '@material-ui/core'
+import { Grid, CircularProgress, makeStyles } from '@material-ui/core'
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../../Layout'
-import { CandidateModule } from '../Module'
+import { ModuleData } from '../../types'
+import { AuthorModule } from '../Module'
 
 const useStyles = makeStyles((theme) => ({
 	moduleGrid: {
@@ -11,52 +12,52 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const CandidateDashboard = () => {
+const AuthorDashboard = () => {
 	const classes = useStyles()
 
-	const [moduleIds, setModuleIds] = useState<Array<string>>([])
+	const [modules, setModules] = useState<Array<ModuleData>>([])
 
 	const { keycloak } = useKeycloak<KeycloakInstance>()
 
 	const [loading, setLoading] = useState<boolean>(true)
 
-	const getCandidateModules = () => {
-		fetch(`http://localhost:9000/candidate/modules`, {
+	const getAuthorModules = () => {
+		fetch(`http://localhost:9000/author/modules`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${keycloak?.token}`,
 			},
 		})
 			.then((response) => response.json())
-			.then((res: Array<string>) => {
+			.then((res: Array<ModuleData>) => {
 				if (res.length === 0) {
 					setLoading(false)
 				} else {
-					setModuleIds(res)
+					setModules(res)
 				}
 			})
 	}
 
 	useEffect(() => {
-		getCandidateModules()
+		getAuthorModules()
 	}, [])
 
 	useEffect(() => {
-		if (moduleIds.length !== 0) {
-			console.log(moduleIds)
+		if (modules.length !== 0) {
+			console.log(modules)
 			setLoading(false)
 		}
-	}, [moduleIds])
+	}, [modules])
 
 	if (!loading) {
-		if (moduleIds.length !== 0)
+		if (modules.length !== 0)
 			return (
 				<Layout>
 					<Grid container spacing={3} className={classes.moduleGrid}>
-						{moduleIds.map((moduleId) => (
+						{modules.map((moduleData) => (
 							<Grid item md={3} sm={6} xs={12}>
-								<CandidateModule
-									moduleId={moduleId}></CandidateModule>
+								<AuthorModule
+									moduleData={moduleData}></AuthorModule>
 							</Grid>
 						))}
 					</Grid>
@@ -82,4 +83,4 @@ const CandidateDashboard = () => {
 	)
 }
 
-export default CandidateDashboard
+export default AuthorDashboard

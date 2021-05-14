@@ -9,6 +9,7 @@ import { useUserStore } from '../store'
 
 import CandidateDashboard from '../src/components/Dashboard/CandidateDashboard'
 import RoleChoice from '../src/components/Dashboard/RoleChoice'
+import AuthorDashboard from '../src/components/Dashboard/AuthorDashboard'
 
 const dashboard = () => {
 	const { keycloak } = useKeycloak<KeycloakInstance>()
@@ -57,6 +58,8 @@ const dashboard = () => {
 		return <RoleChoice roleList={roleList} setCurrRole={setCurrRole} />
 
 	if (currRole === 'CANDIDATE') return <CandidateDashboard />
+
+	if (currRole === 'AUTHOR') return <AuthorDashboard />
 
 	return (
 		<Layout>
