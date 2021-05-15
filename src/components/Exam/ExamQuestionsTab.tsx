@@ -67,7 +67,7 @@ const ExamQuestionsTab = ({
 		let tempQuestionList = questionList.slice()
 		tempQuestionList.pop()
 		setQuestionList(tempQuestionList)
-		setCurrentQuestion(tempQuestionList.length)
+		setCurrentQuestion(tempQuestionList.length - 1)
 	}
 
 	useEffect(() => {

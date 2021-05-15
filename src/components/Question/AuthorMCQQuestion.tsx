@@ -6,12 +6,16 @@ import {
 	Typography,
 	InputAdornment,
 	IconButton,
+	FormControl,
+	InputLabel,
+	OutlinedInput,
 } from '@material-ui/core'
 import React, { useEffect, useMemo, useState } from 'react'
 import 'easymde/dist/easymde.min.css'
 
 import dynamic from 'next/dynamic'
-import { Delete } from '@material-ui/icons'
+import { Delete, Visibility, VisibilityOff } from '@material-ui/icons'
+import clsx from 'clsx'
 
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
 	ssr: false,
@@ -25,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	simpleMDE: {
 		zIndex: 10,
+	},
+	saveButton: {
+		marginLeft: theme.spacing(2),
 	},
 }))
 
@@ -80,7 +87,7 @@ const AuthorMCQQuestion = ({
 			...questionData,
 			statement: '',
 			options: [''],
-			answer: null,
+			answer: '',
 		})
 	}, [])
 
@@ -104,28 +111,36 @@ const AuthorMCQQuestion = ({
 				<Typography variant='h5'>Options</Typography>
 				{questionData.options &&
 					questionData.options.map((options: any, key: number) => (
-						<TextField
-							label={`${key + 1}`}
-							value={questionData.options[key]}
+						<FormControl
 							variant='outlined'
-							size='small'
 							fullWidth
-							margin='normal'
-							onChange={(e) => updateOption(e.target.value, key)}
-							endAdornment={
-								<InputAdornment position='end'>
-									<IconButton
-										aria-label='toggle password visibility'
-										onClick={() => removeOption(key)}
-										onMouseDown={(event) =>
-											event.preventDefault()
-										}
-										edge='end'>
-										<Delete />
-									</IconButton>
-								</InputAdornment>
-							}
-						/>
+							margin='normal'>
+							<InputLabel htmlFor={`option-${key}`}>
+								{`${key + 1}`}
+							</InputLabel>
+							<OutlinedInput
+								id={`option-${key}`}
+								label={`${key + 1}`}
+								value={questionData.options[key]}
+								onChange={(e) =>
+									updateOption(e.target.value, key)
+								}
+								// @ts-ignore
+								endAdornment={
+									<InputAdornment position='end'>
+										<IconButton
+											aria-label='delete option'
+											onClick={() => removeOption(key)}
+											onMouseDown={(event) =>
+												event.preventDefault()
+											}
+											edge='end'>
+											<Delete />
+										</IconButton>
+									</InputAdornment>
+								}
+							/>
+						</FormControl>
 					))}
 				<Button
 					variant='outlined'
@@ -159,6 +174,13 @@ const AuthorMCQQuestion = ({
 						<Button
 							variant='contained'
 							color='secondary'
+							onClick={() => deleteQuestion()}>
+							Delete
+						</Button>
+						<Button
+							variant='outlined'
+							color='secondary'
+							className={classes.saveButton}
 							onClick={() => updateQuestion()}>
 							Save
 						</Button>
