@@ -100,6 +100,7 @@ const create = () => {
 						setExamStartTime={setExamStartTime}
 						examEndTime={examEndTime}
 						setExamEndTime={setExamEndTime}
+						saveButtonText={'Create'}
 						saveFunction={createNewExam}
 						cancelFunction={cancelExamCreation}
 					/>

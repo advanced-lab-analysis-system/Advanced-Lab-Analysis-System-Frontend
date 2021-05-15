@@ -37,6 +37,7 @@ const ExamDetailsTab = ({
 	setExamStartTime,
 	examEndTime,
 	setExamEndTime,
+	saveButtonText,
 	saveFunction,
 	cancelFunction,
 }: {
@@ -46,6 +47,7 @@ const ExamDetailsTab = ({
 	setExamStartTime: any
 	examEndTime: string
 	setExamEndTime: any
+	saveButtonText: string
 	saveFunction: any
 	cancelFunction: any
 }) => {
@@ -60,7 +62,7 @@ const ExamDetailsTab = ({
 							variant='outlined'
 							color='primary'
 							onClick={() => saveFunction()}>
-							Create
+							{saveButtonText}
 						</Button>
 					</Grid>
 					<Grid item>

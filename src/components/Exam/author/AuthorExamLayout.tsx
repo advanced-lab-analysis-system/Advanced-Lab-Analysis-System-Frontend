@@ -135,6 +135,7 @@ const AuthorExamLayout = ({
 						setExamStartTime={setExamStartTime}
 						examEndTime={examEndTime}
 						setExamEndTime={setExamEndTime}
+						saveButtonText={'Update'}
 						saveFunction={updateExamData}
 						cancelFunction={cancelExamCreation}
 					/>
