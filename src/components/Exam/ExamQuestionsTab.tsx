@@ -44,7 +44,7 @@ const ExamQuestionsTab = ({
 }) => {
 	const classes = useStyles()
 
-	const [currentQuestion, setCurrentQuestion] = useState<number | undefined>()
+	const [currentQuestion, setCurrentQuestion] = useState<number>(0)
 
 	const [questionData, setQuestionData] = useState({ type: 'mcq' })
 

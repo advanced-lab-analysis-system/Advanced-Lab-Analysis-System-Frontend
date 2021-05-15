@@ -10,16 +10,11 @@ import {
 	InputLabel,
 	OutlinedInput,
 } from '@material-ui/core'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect } from 'react'
 import 'easymde/dist/easymde.min.css'
 
-import dynamic from 'next/dynamic'
-import { Delete, Visibility, VisibilityOff } from '@material-ui/icons'
-import clsx from 'clsx'
-
-const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
-	ssr: false,
-})
+import { Delete } from '@material-ui/icons'
+import MDEditor from '../MDEditor'
 
 const useStyles = makeStyles((theme) => ({
 	rootPaper: {
@@ -48,17 +43,6 @@ const AuthorMCQQuestion = ({
 }) => {
 	const classes = useStyles()
 
-	const [loading, setLoading] = useState(true)
-
-	const SimpleMDEOptions = useMemo(() => {
-		return {
-			autofocus: true,
-			spellChecker: false,
-			sideBySideFullscreen: false,
-			// @ts-ignore
-		} as SimpleMDE.Options
-	}, [])
-
 	const addOption = () => {
 		setQuestionData({
 			...questionData,
@@ -84,7 +68,7 @@ const AuthorMCQQuestion = ({
 
 	useEffect(() => {
 		setQuestionData({
-			...questionData,
+			type: 'mcq',
 			statement: '',
 			options: [''],
 			answer: '',
@@ -95,10 +79,8 @@ const AuthorMCQQuestion = ({
 		<>
 			<Paper className={classes.rootPaper} variant='outlined'>
 				<Typography variant='h5'>Statement</Typography>
-				<SimpleMDE
-					className={classes.simpleMDE}
+				<MDEditor
 					value={questionData.statement}
-					options={SimpleMDEOptions}
 					onChange={(value: any) =>
 						setQuestionData({
 							...questionData,
@@ -131,23 +113,26 @@ const AuthorMCQQuestion = ({
 										<IconButton
 											aria-label='delete option'
 											onClick={() => removeOption(key)}
+											color='secondary'
 											onMouseDown={(event) =>
 												event.preventDefault()
 											}
 											edge='end'>
-											<Delete />
+											<Delete fontSize='large' />
 										</IconButton>
 									</InputAdornment>
 								}
 							/>
 						</FormControl>
 					))}
-				<Button
-					variant='outlined'
-					color='primary'
-					onClick={() => addOption()}>
-					Add
-				</Button>
+				<div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+					<Button
+						variant='outlined'
+						color='primary'
+						onClick={() => addOption()}>
+						Add
+					</Button>
+				</div>
 			</Paper>
 			<Paper className={classes.rootPaper} variant='outlined'>
 				<Typography variant='h5'>Answer</Typography>
