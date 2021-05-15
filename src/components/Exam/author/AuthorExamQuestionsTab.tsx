@@ -13,8 +13,8 @@ import {
 	Select,
 } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
-import AuthorCodingQuestion from '../Question/AuthorCodingQuestion'
-import AuthorMCQQuestion from '../Question/AuthorMCQQuestion'
+import AuthorCodingQuestion from '../../Question/author/AuthorCodingQuestion'
+import AuthorMCQQuestion from '../../Question/author/AuthorMCQQuestion'
 
 const useStyles = makeStyles((theme) => ({
 	main: {

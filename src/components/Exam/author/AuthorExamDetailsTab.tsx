@@ -37,8 +37,8 @@ const ExamDetailsTab = ({
 	setExamStartTime,
 	examEndTime,
 	setExamEndTime,
-	createNewExam,
-	cancelExamCreation,
+	saveFunction,
+	cancelFunction,
 }: {
 	examName: string
 	setExamName: any
@@ -46,8 +46,8 @@ const ExamDetailsTab = ({
 	setExamStartTime: any
 	examEndTime: string
 	setExamEndTime: any
-	createNewExam: any
-	cancelExamCreation: any
+	saveFunction: any
+	cancelFunction: any
 }) => {
 	const classes = useStyles()
 
@@ -59,7 +59,7 @@ const ExamDetailsTab = ({
 						<Button
 							variant='outlined'
 							color='primary'
-							onClick={() => createNewExam()}>
+							onClick={() => saveFunction()}>
 							Create
 						</Button>
 					</Grid>
@@ -67,7 +67,7 @@ const ExamDetailsTab = ({
 						<Button
 							variant='contained'
 							color='secondary'
-							onClick={() => cancelExamCreation()}>
+							onClick={() => cancelFunction()}>
 							Cancel
 						</Button>
 					</Grid>

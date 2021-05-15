@@ -10,8 +10,8 @@ import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
 import Router from 'next/router'
 import React, { useState, useEffect } from 'react'
-import { ExamDataSummary } from '../../types'
-import Loading from '../Loading'
+import { ExamDataSummary } from '../../../types'
+import Loading from '../../Loading'
 
 const useStyles = makeStyles((theme) => ({
 	rootPaper: {
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const ExamTile = ({ examId }: { examId: string }) => {
+const CandidateExamTile = ({ examId }: { examId: string }) => {
 	const classes = useStyles()
 
 	const [examSummaryData, setExamSummaryData] =
@@ -120,4 +120,4 @@ const ExamTile = ({ examId }: { examId: string }) => {
 	)
 }
 
-export default ExamTile
+export default CandidateExamTile

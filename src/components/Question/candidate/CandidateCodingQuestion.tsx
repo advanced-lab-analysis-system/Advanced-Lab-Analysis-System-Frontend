@@ -15,13 +15,14 @@ import {
 } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 
-import { CodingQuestionData, QuestionData } from '../../types'
+import { CodingQuestionData, QuestionData } from '../../../types'
 
 import ReactMarkdown from 'react-markdown'
 
 import Editor from '@monaco-editor/react'
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
+import Loading from '../../Loading'
 
 const useStyles = makeStyles((theme) => ({
 	gridSection: {
@@ -139,15 +140,7 @@ const RunTestCase = ({
 				padding: '5px',
 			}}>
 			{`Test Case - ${index + 1}`}
-			{loading && (
-				<CircularProgress
-					style={{
-						alignSelf: 'center',
-						marginRight: 'auto',
-						marginLeft: 'auto',
-					}}
-				/>
-			)}
+			{loading && <Loading />}
 			{!loading && <Typography>{result}</Typography>}
 		</Paper>
 	)
@@ -199,7 +192,7 @@ const TestCases = ({
 }
 
 // @ts-ignore
-const CodingQuestion = ({
+const CandidateCodingQuestion = ({
 	question,
 	answers,
 	setAnswers,
@@ -339,4 +332,4 @@ const CodingQuestion = ({
 	)
 }
 
-export default CodingQuestion
+export default CandidateCodingQuestion

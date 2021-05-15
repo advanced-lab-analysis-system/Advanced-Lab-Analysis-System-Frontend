@@ -17,12 +17,23 @@ export type Batch = {
 	status: string
 }
 
+export type ExamData = {
+	id: string
+	examName: string
+	noOfQuestions: number
+	examStartTime: string
+	examEndTime: string
+	authorId: string
+	status: string
+	questionList: Array<CodingQuestionData | MCQQuestionData>
+}
+
 export type ExamDataSummary = {
 	id: string
 	examName: string
 	noOfQuestions: number
-	examStartTime: Date
-	examEndTime: Date
+	examStartTime: string
+	examEndTime: string
 	authorId: string
 	status: string
 }

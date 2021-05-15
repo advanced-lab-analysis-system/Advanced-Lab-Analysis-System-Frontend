@@ -10,7 +10,7 @@ import { KeycloakInstance } from 'keycloak-js'
 import React, { useEffect, useState } from 'react'
 import Layout from '../../../Layout'
 import { ModuleData } from '../../../types'
-import ExamTile from '../../Exam/ExamTile'
+import CandidateExamTile from '../../Exam/candidate/CandidateExamTile'
 import Loading from '../../Loading'
 
 const useStyles = makeStyles((theme) => ({
@@ -85,7 +85,7 @@ const CandidateModulePage = ({
 					</Typography>
 					<Divider className={classes.divider} />
 					{module?.examList.map((exam) => (
-						<ExamTile examId={exam} />
+						<CandidateExamTile examId={exam} />
 					))}
 				</Container>
 			</Layout>

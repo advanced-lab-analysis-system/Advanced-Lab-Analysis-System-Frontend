@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 
-import { MCQQuestionData, QuestionData } from '../../types'
+import { MCQQuestionData, QuestionData } from '../../../types'
 
 import ReactMarkdown from 'react-markdown'
 
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const MCQQuestion = ({
+const CandidateMCQQuestion = ({
 	examId,
 	question,
 	answers,
@@ -126,4 +126,4 @@ const MCQQuestion = ({
 	)
 }
 
-export default MCQQuestion
+export default CandidateMCQQuestion

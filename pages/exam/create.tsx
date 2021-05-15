@@ -3,8 +3,8 @@ import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
 import Router, { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import ExamDetailsTab from '../../src/components/Exam/ExamDetailsTab'
-import ExamQuestionsTab from '../../src/components/Exam/ExamQuestionsTab'
+import ExamDetailsTab from '../../src/components/Exam/author/AuthorExamDetailsTab'
+import ExamQuestionsTab from '../../src/components/Exam/author/AuthorExamQuestionsTab'
 import Layout from '../../src/Layout'
 
 const useStyles = makeStyles((theme) => ({
@@ -100,8 +100,8 @@ const create = () => {
 						setExamStartTime={setExamStartTime}
 						examEndTime={examEndTime}
 						setExamEndTime={setExamEndTime}
-						createNewExam={createNewExam}
-						cancelExamCreation={cancelExamCreation}
+						saveFunction={createNewExam}
+						cancelFunction={cancelExamCreation}
 					/>
 				)}
 				{value === 1 && (

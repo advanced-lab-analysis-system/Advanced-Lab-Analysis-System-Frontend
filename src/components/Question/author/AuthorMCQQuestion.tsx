@@ -19,7 +19,7 @@ import React, { useEffect } from 'react'
 import 'easymde/dist/easymde.min.css'
 
 import { Delete } from '@material-ui/icons'
-import MDEditor from '../MDEditor'
+import MDEditor from '../../MDEditor'
 
 const useStyles = makeStyles((theme) => ({
 	rootPaper: {
