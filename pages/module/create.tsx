@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const index = () => {
+const create = () => {
 	const { keycloak } = useKeycloak<KeycloakInstance>()
 
 	const classes = useStyles()
@@ -217,4 +217,4 @@ const index = () => {
 	)
 }
 
-export default index
+export default create

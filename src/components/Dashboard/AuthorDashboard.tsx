@@ -70,7 +70,7 @@ const AuthorDashboard = () => {
 							<Button
 								variant='outlined'
 								color='primary'
-								onClick={() => Router.push('/module')}>
+								onClick={() => Router.push('/module/create')}>
 								Create Module
 							</Button>
 						</div>

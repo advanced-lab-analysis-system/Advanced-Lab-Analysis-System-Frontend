@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core'
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
-import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Layout from '../../../Layout'
 import { ModuleData } from '../../../types'
