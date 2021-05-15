@@ -1,7 +1,7 @@
 import { AppBar, makeStyles, Tab, Tabs } from '@material-ui/core'
 import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import ExamDetailsTab from '../../src/components/Exam/ExamDetailsTab'
 import ExamQuestionsTab from '../../src/components/Exam/ExamQuestionsTab'
@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme) => ({
 	rootPaper: {
 		padding: theme.spacing(2),
 	},
+	appBar: {
+		zIndex: theme.zIndex.drawer + 1,
+	},
 	createButton: {
 		marginLeft: theme.spacing(2),
 	},
@@ -25,7 +28,7 @@ const create = () => {
 	const { moduleId } = router.query
 	const { keycloak } = useKeycloak<KeycloakInstance>()
 
-	const [value, setValue] = useState(0)
+	const [value, setValue] = useState(1)
 
 	const classes = useStyles()
 
@@ -43,7 +46,7 @@ const create = () => {
 				examEndTime: examEndTime,
 				questionList: [],
 			}),
-		})
+		}).then(() => Router.push(`/module/${moduleId}`))
 	}
 
 	const handleTabChange = (
@@ -64,11 +67,20 @@ const create = () => {
 	const [examName, setExamName] = useInput('')
 	const [examStartTime, setExamStartTime] = useState(new Date().toISOString())
 	const [examEndTime, setExamEndTime] = useState(new Date().toISOString())
+	const [questionList, setQuestionList] = useState([])
+
+	useEffect(() => console.log(examName), [examName])
 
 	return (
 		<Layout>
-			<div style={{ flexGrow: 1 }}>
-				<AppBar position='static' color='secondary'>
+			<div
+				style={{
+					flexGrow: 1,
+				}}>
+				<AppBar
+					position='relative'
+					color='secondary'
+					className={classes.appBar}>
 					<Tabs
 						value={value}
 						onChange={handleTabChange}
@@ -80,14 +92,21 @@ const create = () => {
 				</AppBar>
 				{value === 0 && (
 					<ExamDetailsTab
+						examName={examName}
 						setExamName={setExamName}
 						examStartTime={examStartTime}
 						setExamStartTime={setExamStartTime}
 						examEndTime={examEndTime}
 						setExamEndTime={setExamEndTime}
+						createNewExam={createNewExam}
 					/>
 				)}
-				{value === 1 && <ExamQuestionsTab />}
+				{value === 1 && (
+					<ExamQuestionsTab
+						questionList={questionList}
+						setQuestionList={setQuestionList}
+					/>
+				)}
 			</div>
 		</Layout>
 	)

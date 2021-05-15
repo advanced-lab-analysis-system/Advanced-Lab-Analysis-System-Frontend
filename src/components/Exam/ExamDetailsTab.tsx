@@ -1,5 +1,6 @@
 import MomentUtils from '@date-io/moment'
 import {
+	Button,
 	Container,
 	Grid,
 	makeStyles,
@@ -12,12 +13,14 @@ import {
 	KeyboardDatePicker,
 	KeyboardTimePicker,
 } from '@material-ui/pickers'
+import Router from 'next/router'
 import React, { useEffect } from 'react'
 
 const useStyles = makeStyles((theme) => ({
 	rootContainer: {
 		marginTop: theme.spacing(2),
 		marginBottom: theme.spacing(2),
+		flexGrow: 1,
 	},
 	rootPaper: {
 		padding: theme.spacing(2),
@@ -28,17 +31,21 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ExamDetailsTab = ({
+	examName,
 	setExamName,
 	examStartTime,
 	setExamStartTime,
 	examEndTime,
 	setExamEndTime,
+	createNewExam,
 }: {
+	examName: string
 	setExamName: any
 	examStartTime: string
 	setExamStartTime: any
 	examEndTime: string
 	setExamEndTime: any
+	createNewExam: any
 }) => {
 	const classes = useStyles()
 
@@ -49,12 +56,31 @@ const ExamDetailsTab = ({
 	return (
 		<Container className={classes.rootContainer}>
 			<Grid container spacing={2}>
+				<Grid item container xs={12} direction='row-reverse'>
+					<Grid item className={classes.createButton}>
+						<Button
+							variant='outlined'
+							color='primary'
+							onClick={() => createNewExam()}>
+							Create
+						</Button>
+					</Grid>
+					<Grid item>
+						<Button
+							variant='contained'
+							color='secondary'
+							onClick={() => Router.push('/dashboard')}>
+							Cancel
+						</Button>
+					</Grid>
+				</Grid>
 				<Grid item xs={12} md={6}>
 					<Paper className={classes.rootPaper} variant='outlined'>
 						<TextField
 							id='examName'
 							label='Exam Name'
 							variant='outlined'
+							value={examName}
 							onChange={setExamName}
 							fullWidth
 						/>
