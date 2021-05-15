@@ -42,13 +42,14 @@ const AuthorCodingQuestion = ({
 	const classes = useStyles()
 
 	useEffect(() => {
-		setQuestionData({
-			type: 'coding',
-			statement: '',
-			testCases: [{ input: '', output: '' }],
-			timeLimit: '',
-			memoryLimit: '',
-		})
+		if (!questionData.statement)
+			setQuestionData({
+				type: 'coding',
+				statement: '',
+				testCases: [{ input: '', output: '' }],
+				timeLimit: '',
+				memoryLimit: '',
+			})
 	}, [])
 
 	const addTestCase = () => {

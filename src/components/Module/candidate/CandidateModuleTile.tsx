@@ -55,9 +55,7 @@ const CandidateModuleTile = ({ moduleId }: { moduleId: string }) => {
 		return (
 			<Link href={`/module/${moduleId}`} passHref>
 				<Button fullWidth>
-					<Paper
-						className={classes.rootPaper}
-						onClick={() => console.log('module click')}>
+					<Paper className={classes.rootPaper}>
 						<Typography variant='h4'>
 							{module?.moduleName.toUpperCase()}
 						</Typography>

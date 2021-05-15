@@ -44,7 +44,6 @@ const CandidateDashboard = () => {
 
 	useEffect(() => {
 		if (moduleIds.length !== 0) {
-			console.log(moduleIds)
 			setLoading(false)
 		}
 	}, [moduleIds])

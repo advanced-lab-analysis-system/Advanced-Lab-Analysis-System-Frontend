@@ -44,7 +44,6 @@ const ExamTile = ({ examId }: { examId: string }) => {
 		})
 			.then((response) => response.json())
 			.then((res: ExamDataSummary) => {
-				console.log(res)
 				res.examStartTime = new Date(res.examStartTime)
 				res.examEndTime = new Date(res.examEndTime)
 				setExamSummaryData(res)

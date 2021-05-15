@@ -39,9 +39,7 @@ const AuthorModuleTile = ({ moduleData }: { moduleData: ModuleData }) => {
 		return (
 			<Link href={`/module/${moduleData.id}`} passHref>
 				<Button fullWidth>
-					<Paper
-						className={classes.rootPaper}
-						onClick={() => console.log('module click')}>
+					<Paper className={classes.rootPaper}>
 						<Typography variant='h4'>
 							{moduleData?.moduleName.toUpperCase()}
 						</Typography>

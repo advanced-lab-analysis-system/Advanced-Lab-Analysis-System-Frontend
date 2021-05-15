@@ -9,6 +9,11 @@ import {
 	FormControl,
 	InputLabel,
 	OutlinedInput,
+	FormControlLabel,
+	FormLabel,
+	Radio,
+	RadioGroup,
+	Grid,
 } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import 'easymde/dist/easymde.min.css'
@@ -27,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	saveButton: {
 		marginLeft: theme.spacing(2),
+	},
+	answerGroup: {
+		margin: theme.spacing(2),
 	},
 }))
 
@@ -92,7 +100,7 @@ const AuthorMCQQuestion = ({
 			<Paper className={classes.rootPaper} variant='outlined'>
 				<Typography variant='h5'>Options</Typography>
 				{questionData.options &&
-					questionData.options.map((options: any, key: number) => (
+					questionData.options.map((_options: any, key: number) => (
 						<FormControl
 							variant='outlined'
 							fullWidth
@@ -136,32 +144,44 @@ const AuthorMCQQuestion = ({
 			</Paper>
 			<Paper className={classes.rootPaper} variant='outlined'>
 				<Typography variant='h5'>Answer</Typography>
-				<div
-					style={{
-						display: 'flex',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-					}}>
-					<TextField
-						label={`Enter Answer index`}
-						variant='outlined'
-						size='medium'
-						margin='normal'
-						value={questionData.answer ? questionData.answer : ''}
-						onChange={(e) => {
-							setQuestionData({
-								...questionData,
-								answer: e.target.value,
-							})
-						}}
-					/>
-					<div>
-						<Button
-							variant='contained'
-							color='secondary'
-							onClick={() => deleteQuestion()}>
-							Delete
-						</Button>
+				<Grid container alignItems='center'>
+					<Grid item xs={12} md={8} container>
+						<FormControl
+							component='fieldset'
+							className={classes.answerGroup}>
+							<RadioGroup
+								aria-label='options'
+								name='options'
+								style={{ width: 'fit-content' }}
+								value={
+									questionData.answer
+										? questionData.answer
+										: ''
+								}
+								onChange={(e) => {
+									setQuestionData({
+										...questionData,
+										answer: e.target.value,
+									})
+								}}>
+								<Grid item container>
+									{questionData.options &&
+										questionData.options.map(
+											(_option: any, key: number) => (
+												<FormControlLabel
+													value={`${key}`}
+													control={
+														<Radio color='primary' />
+													}
+													label={`${key + 1}`}
+												/>
+											)
+										)}
+								</Grid>
+							</RadioGroup>
+						</FormControl>
+					</Grid>
+					<Grid item xs={12} md={4} container direction='row-reverse'>
 						<Button
 							variant='outlined'
 							color='secondary'
@@ -169,8 +189,14 @@ const AuthorMCQQuestion = ({
 							onClick={() => updateQuestion()}>
 							Save
 						</Button>
-					</div>
-				</div>
+						<Button
+							variant='contained'
+							color='secondary'
+							onClick={() => deleteQuestion()}>
+							Delete
+						</Button>
+					</Grid>
+				</Grid>
 			</Paper>
 		</>
 	)

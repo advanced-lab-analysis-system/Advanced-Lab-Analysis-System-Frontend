@@ -115,7 +115,6 @@ const RunTestCase = ({
 		)
 			.then((response) => response.json())
 			.then((res) => {
-				console.log(res)
 				if (res.status_id === 3) {
 					setResult('Accepted')
 				} else {
@@ -229,7 +228,6 @@ const CodingQuestion = ({
 	const [editorValue, setEditorValue] = useState('')
 
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-		console.log(event.target)
 		setCurrentLanguage(event.target.value as number)
 	}
 
@@ -239,7 +237,6 @@ const CodingQuestion = ({
 	}
 
 	useEffect(() => {
-		console.log(answers, setAnswers)
 		let temp: React.SetStateAction<any[]> = []
 		// @ts-ignore
 		question.languagesAccepted.forEach((language) => {
@@ -247,7 +244,6 @@ const CodingQuestion = ({
 			temp.push({ value: language.id, text: languages[language.id] })
 		})
 		setLanguagesAccepted(temp)
-		console.log(languagesAccepted)
 	}, [])
 
 	const languages = {

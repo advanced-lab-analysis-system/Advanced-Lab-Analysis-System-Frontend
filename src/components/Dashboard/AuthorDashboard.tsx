@@ -50,7 +50,6 @@ const AuthorDashboard = () => {
 
 	useEffect(() => {
 		if (modules.length !== 0) {
-			console.log(modules)
 			setLoading(false)
 		}
 	}, [modules])

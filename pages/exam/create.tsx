@@ -28,7 +28,7 @@ const create = () => {
 	const { moduleId } = router.query
 	const { keycloak } = useKeycloak<KeycloakInstance>()
 
-	const [value, setValue] = useState(1)
+	const [value, setValue] = useState(0)
 
 	const classes = useStyles()
 
@@ -41,12 +41,12 @@ const create = () => {
 			},
 			body: JSON.stringify({
 				examName: examName,
-				noOfQuestions: 0,
+				noOfQuestions: questionList.length,
 				examStartTime: examStartTime,
 				examEndTime: examEndTime,
-				questionList: [],
+				questionList: questionList,
 			}),
-		}).then(() => Router.push(`/module/${moduleId}`))
+		}).then(() => router.push(`/module/${moduleId}`))
 	}
 
 	const handleTabChange = (
@@ -54,6 +54,10 @@ const create = () => {
 		newValue: number
 	) => {
 		setValue(newValue)
+	}
+
+	const cancelExamCreation = () => {
+		router.push(`/module/${moduleId}`)
 	}
 
 	const useInput = (initialValue: any) => {
@@ -68,8 +72,6 @@ const create = () => {
 	const [examStartTime, setExamStartTime] = useState(new Date().toISOString())
 	const [examEndTime, setExamEndTime] = useState(new Date().toISOString())
 	const [questionList, setQuestionList] = useState([])
-
-	useEffect(() => console.log(examName), [examName])
 
 	return (
 		<Layout>
@@ -99,6 +101,7 @@ const create = () => {
 						examEndTime={examEndTime}
 						setExamEndTime={setExamEndTime}
 						createNewExam={createNewExam}
+						cancelExamCreation={cancelExamCreation}
 					/>
 				)}
 				{value === 1 && (

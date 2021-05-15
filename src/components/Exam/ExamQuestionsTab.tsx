@@ -66,13 +66,19 @@ const ExamQuestionsTab = ({
 	const deleteQuestion = () => {
 		let tempQuestionList = questionList.slice()
 		tempQuestionList.pop()
-		setQuestionList(tempQuestionList)
-		setCurrentQuestion(tempQuestionList.length - 1)
+		if (tempQuestionList.length === 0) {
+			setQuestionList([
+				{ type: 'mcq', statement: '', options: [''], answer: 0 },
+			])
+			setCurrentQuestion(0)
+		} else {
+			setQuestionList(tempQuestionList)
+			setCurrentQuestion(tempQuestionList.length - 1)
+		}
 	}
 
 	useEffect(() => {
 		setQuestionData(questionList[currentQuestion])
-		console.log(questionList)
 	}, [currentQuestion])
 
 	useEffect(() => {

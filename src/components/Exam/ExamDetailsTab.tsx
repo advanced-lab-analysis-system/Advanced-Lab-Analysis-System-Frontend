@@ -13,7 +13,7 @@ import {
 	KeyboardDatePicker,
 	KeyboardTimePicker,
 } from '@material-ui/pickers'
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 
 const useStyles = makeStyles((theme) => ({
@@ -38,6 +38,7 @@ const ExamDetailsTab = ({
 	examEndTime,
 	setExamEndTime,
 	createNewExam,
+	cancelExamCreation,
 }: {
 	examName: string
 	setExamName: any
@@ -46,12 +47,9 @@ const ExamDetailsTab = ({
 	examEndTime: string
 	setExamEndTime: any
 	createNewExam: any
+	cancelExamCreation: any
 }) => {
 	const classes = useStyles()
-
-	useEffect(() => {
-		console.log(examStartTime)
-	}, [])
 
 	return (
 		<Container className={classes.rootContainer}>
@@ -69,7 +67,7 @@ const ExamDetailsTab = ({
 						<Button
 							variant='contained'
 							color='secondary'
-							onClick={() => Router.push('/dashboard')}>
+							onClick={() => cancelExamCreation()}>
 							Cancel
 						</Button>
 					</Grid>
@@ -92,7 +90,6 @@ const ExamDetailsTab = ({
 							<Grid container justify='space-around'>
 								<Grid item xs={12} md={6}>
 									<KeyboardDatePicker
-										disableToolbar
 										variant='inline'
 										inputVariant='outlined'
 										format='DD/MM/yyyy'
@@ -108,7 +105,6 @@ const ExamDetailsTab = ({
 								</Grid>
 								<Grid item xs={12} md={6}>
 									<KeyboardTimePicker
-										disableToolbar
 										variant='inline'
 										inputVariant='outlined'
 										margin='normal'
@@ -134,7 +130,6 @@ const ExamDetailsTab = ({
 								</Grid>
 								<Grid item xs={12} md={6}>
 									<KeyboardDatePicker
-										disableToolbar
 										variant='inline'
 										inputVariant='outlined'
 										format='DD/MM/yyyy'
@@ -150,7 +145,6 @@ const ExamDetailsTab = ({
 								</Grid>
 								<Grid item xs={12} md={6}>
 									<KeyboardTimePicker
-										disableToolbar
 										variant='inline'
 										inputVariant='outlined'
 										margin='normal'

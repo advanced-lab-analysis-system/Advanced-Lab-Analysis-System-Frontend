@@ -138,7 +138,6 @@ const exam = () => {
 		})
 			.then((response) => response.json())
 			.then((res: CandidateExamData) => {
-				console.log(res)
 				setExamDetails(res)
 				setLoading(false)
 			})

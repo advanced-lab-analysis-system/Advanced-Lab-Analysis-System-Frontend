@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Loading from '../../src/components/Loading'
 import {
 	CandidateModulePage,
@@ -12,6 +12,10 @@ import { useUserStore } from '../../store'
 const modulePage = () => {
 	const router = useRouter()
 	const { moduleId } = router.query
+
+	useEffect(() => {
+		if (currRole === null) router.push('/dashboard')
+	}, [])
 
 	const currRole = useUserStore((state) => state.currRole)
 

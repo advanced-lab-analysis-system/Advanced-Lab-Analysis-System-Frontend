@@ -81,7 +81,6 @@ const MCQQuestion = ({
 		)
 			.then((response) => response.json())
 			.then((res) => {
-				console.log(res)
 				setStartTime(new Date().toISOString())
 			})
 	}
