@@ -9,7 +9,6 @@ import {
 	Checkbox,
 	FormControlLabel,
 	FormGroup,
-	FormHelperText,
 	FormLabel,
 } from '@material-ui/core'
 import { useKeycloak } from '@react-keycloak/ssr'
