@@ -108,47 +108,46 @@ const AuthorExamLayout = ({
 		if (questionList !== undefined) setLoading(false)
 	}, [questionList])
 
-		return (
-			<Layout>
-				<div
-					style={{
-						flexGrow: 1,
-					}}>
-					<AppBar
-						position='relative'
-						color='secondary'
-						className={classes.appBar}>
-						<Tabs
-							value={value}
-							onChange={handleTabChange}
-							indicatorColor='primary'
-							aria-label='Exam Tabs'>
-							<Tab label='Details' />
-							<Tab label='Questions' />
-						</Tabs>
-					</AppBar>
-					{value === 0 && (
-						<AuthorExamDetailsTab
-							examName={examName}
-							setExamName={setExamName}
-							examStartTime={examStartTime}
-							setExamStartTime={setExamStartTime}
-							examEndTime={examEndTime}
-							setExamEndTime={setExamEndTime}
-							saveFunction={updateExamData}
-							cancelFunction={cancelExamCreation}
-						/>
-					)}
-					{value === 1 && (
-						<AuthorExamQuestionsTab
-							questionList={questionList}
-							setQuestionList={setQuestionList}
-						/>
-					)}
-				</div>
-			</Layout>
-		)
-	}
+	return (
+		<Layout>
+			<div
+				style={{
+					flexGrow: 1,
+				}}>
+				<AppBar
+					position='relative'
+					color='secondary'
+					className={classes.appBar}>
+					<Tabs
+						value={value}
+						onChange={handleTabChange}
+						indicatorColor='primary'
+						aria-label='Exam Tabs'>
+						<Tab label='Details' />
+						<Tab label='Questions' />
+					</Tabs>
+				</AppBar>
+				{value === 0 && (
+					<AuthorExamDetailsTab
+						examName={examName}
+						setExamName={setExamName}
+						examStartTime={examStartTime}
+						setExamStartTime={setExamStartTime}
+						examEndTime={examEndTime}
+						setExamEndTime={setExamEndTime}
+						saveFunction={updateExamData}
+						cancelFunction={cancelExamCreation}
+					/>
+				)}
+				{value === 1 && (
+					<AuthorExamQuestionsTab
+						questionList={questionList}
+						setQuestionList={setQuestionList}
+					/>
+				)}
+			</div>
+		</Layout>
+	)
 }
 
 export default AuthorExamLayout
