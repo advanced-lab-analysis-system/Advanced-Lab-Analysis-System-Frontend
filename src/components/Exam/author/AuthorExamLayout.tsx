@@ -42,7 +42,12 @@ const AuthorExamLayout = ({
 	const [loading, setLoading] = useState(true)
 
 	const updateExamData = () => {
-		console.log(examStartTime.toISOString(), examEndTime.toISOString())
+		let tempQuestionList = questionList.slice()
+		for (let i = 0; i < tempQuestionList.length; i++) {
+			// @ts-ignore
+			tempQuestionList[i].questionId = i
+		}
+
 		fetch(`http://localhost:9000/author/exam/${examId}`, {
 			method: 'PUT',
 			headers: {
@@ -54,7 +59,7 @@ const AuthorExamLayout = ({
 				noOfQuestions: questionList.length,
 				examStartTime: examStartTime,
 				examEndTime: examEndTime,
-				questionList: questionList,
+				questionList: tempQuestionList,
 			}),
 		}).then(() => {
 			console.log('Updated')

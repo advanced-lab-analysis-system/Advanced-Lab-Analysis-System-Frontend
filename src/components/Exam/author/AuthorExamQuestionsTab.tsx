@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const ExamQuestionsTab = ({
+const AuthorExamQuestionsTab = ({
 	questionList,
 	setQuestionList,
 }: {
@@ -46,34 +46,43 @@ const ExamQuestionsTab = ({
 
 	const [currentQuestion, setCurrentQuestion] = useState<number>(0)
 
-	const [questionData, setQuestionData] = useState({ type: 'mcq' })
+	const [questionData, setQuestionData] = useState({ questionType: 'mcq' })
 
 	const addNewQuestion = () => {
 		setQuestionList((questionList: Array<any>) => [
 			...questionList,
-			{ type: 'mcq' },
+			{ questionType: 'mcq' },
 		])
 		setCurrentQuestion(questionList.length)
-		setQuestionData({ type: 'mcq' })
+		setQuestionData({ questionType: 'mcq' })
 	}
 
-	const updateQuestion = () => {
+	const updateQuestion = (languagesAccepted) => {
 		let tempQuestionList = questionList.slice()
-		tempQuestionList[currentQuestion] = questionData
+		let tempQuestionData = questionData
+		tempQuestionData.languagesAccepted = languagesAccepted
+		tempQuestionList[currentQuestion] = tempQuestionData
 		setQuestionList(tempQuestionList)
 	}
 
-	const deleteQuestion = () => {
+	const deleteQuestion = (ind: number) => {
 		let tempQuestionList = questionList.slice()
-		tempQuestionList.pop()
+		console.log(tempQuestionList, currentQuestion)
+		tempQuestionList.splice(currentQuestion, 1)
 		if (tempQuestionList.length === 0) {
 			setQuestionList([
-				{ type: 'mcq', statement: '', options: [''], answer: 0 },
+				{
+					questionType: 'mcq',
+					statement: '',
+					options: [''],
+					answer: 0,
+				},
 			])
 			setCurrentQuestion(0)
 		} else {
 			setQuestionList(tempQuestionList)
-			setCurrentQuestion(tempQuestionList.length - 1)
+			if (currentQuestion == 0) setQuestionData(tempQuestionList[0])
+			else setCurrentQuestion(currentQuestion - 1)
 		}
 	}
 
@@ -153,10 +162,10 @@ const ExamQuestionsTab = ({
 								setQuestionData({
 									...questionData,
 									// @ts-ignore
-									type: e.target.value,
+									questionType: e.target.value,
 								})
 							}}
-							value={questionData.type}
+							value={questionData.questionType}
 							label='Question Type'>
 							{[
 								['mcq', 'coding'].map((qType) => (
@@ -171,7 +180,7 @@ const ExamQuestionsTab = ({
 					</FormControl>
 				</Grid>
 				<Grid item xs={12}>
-					{questionData.type === 'mcq' && (
+					{questionData.questionType === 'mcq' && (
 						<AuthorMCQQuestion
 							questionData={questionData}
 							setQuestionData={setQuestionData}
@@ -179,7 +188,7 @@ const ExamQuestionsTab = ({
 							deleteQuestion={deleteQuestion}
 						/>
 					)}
-					{questionData.type === 'coding' && (
+					{questionData.questionType === 'coding' && (
 						<AuthorCodingQuestion
 							questionData={questionData}
 							setQuestionData={setQuestionData}
@@ -193,4 +202,4 @@ const ExamQuestionsTab = ({
 	)
 }
 
-export default ExamQuestionsTab
+export default AuthorExamQuestionsTab

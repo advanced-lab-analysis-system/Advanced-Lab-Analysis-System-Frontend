@@ -98,11 +98,12 @@ const RunTestCase = ({
 
 	const getResult = () => {
 		fetch(
-			`http://localhost:9000/candidate/submission?examId=${examId}&questionType=coding`,
+			`http://localhost:9000/candidate/exam/${examId}/submission?questionType=coding`,
 			{
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${keycloak?.token}`,
+					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
 					questionId: question.questionId,
@@ -116,6 +117,7 @@ const RunTestCase = ({
 		)
 			.then((response) => response.json())
 			.then((res) => {
+				console.log(res)
 				if (res.status_id === 3) {
 					setResult('Accepted')
 				} else {
@@ -128,7 +130,7 @@ const RunTestCase = ({
 	useEffect(() => {
 		if (runTestCase) {
 			setLoading(true)
-			// getResult()
+			getResult()
 		}
 	}, [runTestCase])
 	return (
@@ -218,15 +220,20 @@ const CandidateCodingQuestion = ({
 		question.testCases
 	)
 
-	const [editorValue, setEditorValue] = useState('')
-
-	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+	const handleLanguageChange = (
+		event: React.ChangeEvent<{ value: unknown }>
+	) => {
 		setCurrentLanguage(event.target.value as number)
 	}
 
 	// @ts-ignore
 	const handleEditorChange = (value: string, event: any) => {
-		setEditorValue(value)
+		let key = question.questionId
+		console.log(key)
+		setAnswers({
+			...answers,
+			[key]: value,
+		})
 	}
 
 	useEffect(() => {
@@ -237,6 +244,7 @@ const CandidateCodingQuestion = ({
 			temp.push({ value: language.id, text: languages[language.id] })
 		})
 		setLanguagesAccepted(temp)
+		console.log(question)
 	}, [])
 
 	const languages = {
@@ -278,7 +286,7 @@ const CandidateCodingQuestion = ({
 					<Select
 						labelId='language-option-label'
 						id='language-option'
-						onChange={handleChange}
+						onChange={handleLanguageChange}
 						value={currentLanguage}
 						label='Language'>
 						{[
@@ -299,7 +307,7 @@ const CandidateCodingQuestion = ({
 					defaultLanguage='cpp'
 					// @ts-ignore
 					language={languages[currentLanguage]}
-					value={editorValue}
+					value={answers[question.questionId]}
 					// @ts-ignore
 					onChange={handleEditorChange}
 					className={classes.editor}
@@ -322,7 +330,7 @@ const CandidateCodingQuestion = ({
 						setRunTestCase={setRunTestCase}
 						question={question}
 						currentLanguage={currentLanguage}
-						editorValue={editorValue}
+						editorValue={answers[question.questionId]}
 						examId={examId}
 						runTestCase={runTestCase}
 					/>

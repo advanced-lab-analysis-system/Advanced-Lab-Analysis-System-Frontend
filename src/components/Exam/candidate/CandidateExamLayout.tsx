@@ -76,8 +76,10 @@ const CandidateExamLayout = ({ examId }: { examId: string }) => {
 	const [answers, setAnswers] = useState({})
 
 	useEffect(() => {
-		setCurrentQuestion(examDetails.questionList[0])
-	}, [])
+		if (examDetails.questionList !== undefined) {
+			setCurrentQuestion(examDetails.questionList[0])
+		}
+	}, [examDetails])
 
 	useEffect(() => {
 		if (currentQuestion !== undefined) setLoading(false)
@@ -95,26 +97,29 @@ const CandidateExamLayout = ({ examId }: { examId: string }) => {
 								variant='outlined'
 								className={classes.questionList}>
 								<List>
-									{examDetails.questionList.map(
-										(question: any, key: number) => (
-											<ListItem>
-												<Button
-													fullWidth
-													color='primary'
-													variant={
-														currentQuestion ===
-														question
-															? 'contained'
-															: 'outlined'
-													}
-													onClick={() =>
-														setCurrentQuestion(
+									{examDetails.questionList &&
+										examDetails.questionList.map(
+											(question: any, key: number) => (
+												<ListItem>
+													<Button
+														fullWidth
+														color='primary'
+														variant={
+															currentQuestion ===
 															question
-														)
-													}>{`${key + 1}`}</Button>
-											</ListItem>
-										)
-									)}
+																? 'contained'
+																: 'outlined'
+														}
+														onClick={() =>
+															setCurrentQuestion(
+																question
+															)
+														}>{`${
+														key + 1
+													}`}</Button>
+												</ListItem>
+											)
+										)}
 								</List>
 							</Paper>
 						</Drawer>

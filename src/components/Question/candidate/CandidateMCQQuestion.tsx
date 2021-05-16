@@ -64,7 +64,7 @@ const CandidateMCQQuestion = ({
 	const submitCurrSelection = () => {
 		setEndTime(new Date().toISOString())
 		fetch(
-			`http://localhost:9000/candidate/submission?examId=${examId}&candidateId=${keycloak?.subject}&questionType=mcq`,
+			`http://localhost:9000/candidate/exam/${examId}/submission?questionType=mcq`,
 			{
 				method: 'POST',
 				headers: {
@@ -85,7 +85,10 @@ const CandidateMCQQuestion = ({
 			})
 	}
 
-	useEffect(() => setStartTime(new Date().toISOString()), [])
+	useEffect(() => {
+		setStartTime(new Date().toISOString())
+		console.log(question)
+	}, [])
 
 	return (
 		<Grid container>

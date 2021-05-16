@@ -75,12 +75,13 @@ const AuthorMCQQuestion = ({
 	}
 
 	useEffect(() => {
-		setQuestionData({
-			type: 'mcq',
-			statement: '',
-			options: [''],
-			answer: '',
-		})
+		if (!questionData.answer)
+			setQuestionData({
+				questionType: 'mcq',
+				statement: '',
+				options: [''],
+				answer: '',
+			})
 	}, [])
 
 	return (

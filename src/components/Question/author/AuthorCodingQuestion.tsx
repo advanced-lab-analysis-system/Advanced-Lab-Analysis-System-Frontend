@@ -1,5 +1,9 @@
 import {
 	Button,
+	Checkbox,
+	FormControl,
+	FormControlLabel,
+	FormGroup,
 	Grid,
 	IconButton,
 	makeStyles,
@@ -8,8 +12,10 @@ import {
 	Typography,
 } from '@material-ui/core'
 import { Delete } from '@material-ui/icons'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import MDEditor from '../../MDEditor'
+
+import { defLanguages } from '../../../languages'
 
 const useStyles = makeStyles((theme) => ({
 	rootPaper: {
@@ -25,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 	saveButton: {
 		marginLeft: theme.spacing(2),
+	},
+	formControl: {
+		display: 'flex',
+		margin: theme.spacing(3),
 	},
 }))
 
@@ -44,13 +54,16 @@ const AuthorCodingQuestion = ({
 	useEffect(() => {
 		if (!questionData.statement)
 			setQuestionData({
-				type: 'coding',
+				questionType: 'coding',
 				statement: '',
 				testCases: [{ input: '', output: '' }],
+				languagesAccepted: [{ id: '', name: '' }],
 				timeLimit: '',
 				memoryLimit: '',
 			})
 	}, [])
+
+	const [languages, setLanguages] = useState(defLanguages)
 
 	const addTestCase = () => {
 		setQuestionData({
@@ -188,6 +201,36 @@ const AuthorCodingQuestion = ({
 				</div>
 			</Paper>
 			<Paper className={classes.rootPaper} variant='outlined'>
+				<Typography variant='h5'>Languages</Typography>
+				<FormControl
+					component='fieldset'
+					className={classes.formControl}>
+					<FormGroup
+						style={{ display: 'flex', flexDirection: 'row' }}>
+						{languages.map((lang, key) => (
+							<FormControlLabel
+								style={{ margin: 0 }}
+								control={
+									<Checkbox
+										style={{ margin: 0 }}
+										checked={lang.selected}
+										onChange={() => {
+											let tempLanguages =
+												languages.slice()
+											tempLanguages[key].selected =
+												!tempLanguages[key].selected
+											setLanguages(tempLanguages)
+										}}
+										name={lang.name}
+									/>
+								}
+								label={lang.name}
+							/>
+						))}
+					</FormGroup>
+				</FormControl>
+			</Paper>
+			<Paper className={classes.rootPaper} variant='outlined'>
 				<Typography variant='h5'>Limits</Typography>
 				<Grid container spacing={2}>
 					<Grid item xs={5}>
@@ -230,7 +273,20 @@ const AuthorCodingQuestion = ({
 							<Button
 								variant='outlined'
 								color='secondary'
-								onClick={() => updateQuestion()}>
+								onClick={() => {
+									let tempLanguages = languages.slice()
+									let languagesAccepted = []
+									tempLanguages.forEach((lang) => {
+										if (lang.selected) {
+											languagesAccepted.push({
+												id: lang.id,
+												name: lang.name,
+											})
+										}
+									})
+
+									updateQuestion(languagesAccepted)
+								}}>
 								Save
 							</Button>
 						</Grid>

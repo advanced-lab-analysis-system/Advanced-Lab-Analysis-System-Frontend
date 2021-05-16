@@ -3,8 +3,8 @@ import { useKeycloak } from '@react-keycloak/ssr'
 import { KeycloakInstance } from 'keycloak-js'
 import Router, { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import ExamDetailsTab from '../../src/components/Exam/author/AuthorExamDetailsTab'
-import ExamQuestionsTab from '../../src/components/Exam/author/AuthorExamQuestionsTab'
+import AuthorExamDetailsTab from '../../src/components/Exam/author/AuthorExamDetailsTab'
+import AuthorExamQuestionsTab from '../../src/components/Exam/author/AuthorExamQuestionsTab'
 import Layout from '../../src/Layout'
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +33,20 @@ const create = () => {
 	const classes = useStyles()
 
 	const createNewExam = () => {
+		let tempExamStartTime = new Date(examStartTime)
+		tempExamStartTime.setSeconds(0)
+		tempExamStartTime.setMilliseconds(0)
+
+		let tempExamEndTime = new Date(examEndTime)
+		tempExamEndTime.setSeconds(0)
+		tempExamEndTime.setMilliseconds(0)
+
+		let tempQuestionList = questionList.slice()
+		for (let i = 0; i < tempQuestionList.length; i++) {
+			// @ts-ignore
+			tempQuestionList[i].questionId = i
+		}
+
 		fetch(`http://localhost:9000/author/module/${moduleId}/exams`, {
 			method: 'POST',
 			headers: {
@@ -42,9 +56,9 @@ const create = () => {
 			body: JSON.stringify({
 				examName: examName,
 				noOfQuestions: questionList.length,
-				examStartTime: examStartTime,
-				examEndTime: examEndTime,
-				questionList: questionList,
+				examStartTime: tempExamStartTime,
+				examEndTime: tempExamEndTime,
+				questionList: tempQuestionList,
 			}),
 		}).then(() => router.push(`/module/${moduleId}`))
 	}
@@ -61,8 +75,8 @@ const create = () => {
 	}
 
 	const [examName, setExamName] = useState('')
-	const [examStartTime, setExamStartTime] = useState(new Date().toISOString())
-	const [examEndTime, setExamEndTime] = useState(new Date().toISOString())
+	const [examStartTime, setExamStartTime] = useState(new Date())
+	const [examEndTime, setExamEndTime] = useState(new Date())
 	const [questionList, setQuestionList] = useState([])
 
 	return (
@@ -85,7 +99,7 @@ const create = () => {
 					</Tabs>
 				</AppBar>
 				{value === 0 && (
-					<ExamDetailsTab
+					<AuthorExamDetailsTab
 						examName={examName}
 						setExamName={setExamName}
 						examStartTime={examStartTime}
@@ -98,7 +112,7 @@ const create = () => {
 					/>
 				)}
 				{value === 1 && (
-					<ExamQuestionsTab
+					<AuthorExamQuestionsTab
 						questionList={questionList}
 						setQuestionList={setQuestionList}
 					/>

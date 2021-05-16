@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const ExamDetailsTab = ({
+const AuthorExamDetailsTab = ({
 	examName,
 	setExamName,
 	examStartTime,
@@ -170,4 +170,4 @@ const ExamDetailsTab = ({
 	)
 }
 
-export default ExamDetailsTab
+export default AuthorExamDetailsTab
