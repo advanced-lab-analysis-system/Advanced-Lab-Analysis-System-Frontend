@@ -60,15 +60,7 @@ const create = () => {
 		router.push(`/module/${moduleId}`)
 	}
 
-	const useInput = (initialValue: any) => {
-		const [value, setValue] = useState(initialValue)
-		function handleChange(e: { target: { value: any } }) {
-			setValue(e.target.value)
-		}
-		return [value, handleChange]
-	}
-
-	const [examName, setExamName] = useInput('')
+	const [examName, setExamName] = useState('')
 	const [examStartTime, setExamStartTime] = useState(new Date().toISOString())
 	const [examEndTime, setExamEndTime] = useState(new Date().toISOString())
 	const [questionList, setQuestionList] = useState([])

@@ -36,18 +36,12 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const CandidateExamLayout = ({
-	examId,
-	loading,
-	setLoading,
-}: {
-	examId: string
-	loading: boolean
-	setLoading: any
-}) => {
+const CandidateExamLayout = ({ examId }: { examId: string }) => {
 	const { keycloak } = useKeycloak<KeycloakInstance>()
 
 	const handleInExam = useExamStore((state) => state.handleInExam)
+
+	const [loading, setLoading] = useState(true)
 
 	// @ts-ignore
 	const [examDetails, setExamDetails] = useState<CandidateExamData>({})
@@ -89,59 +83,69 @@ const CandidateExamLayout = ({
 		if (currentQuestion !== undefined) setLoading(false)
 	}, [currentQuestion])
 
+	if (!loading) {
+		return (
+			<Layout>
+				<Grid container>
+					<Grid item md={1}>
+						<Drawer className={classes.drawer} variant='permanent'>
+							<Toolbar />
+							<Paper
+								square
+								variant='outlined'
+								className={classes.questionList}>
+								<List>
+									{examDetails.questionList.map(
+										(question: any, key: number) => (
+											<ListItem>
+												<Button
+													fullWidth
+													color='primary'
+													variant={
+														currentQuestion ===
+														question
+															? 'contained'
+															: 'outlined'
+													}
+													onClick={() =>
+														setCurrentQuestion(
+															question
+														)
+													}>{`${key + 1}`}</Button>
+											</ListItem>
+										)
+									)}
+								</List>
+							</Paper>
+						</Drawer>
+					</Grid>
+					<Grid item md={11}>
+						{currentQuestion.questionType === 'mcq' && (
+							<CandidateMCQQuestion
+								// @ts-ignore
+								question={currentQuestion}
+								answers={answers}
+								setAnswers={setAnswers}
+								examId={examDetails.id}
+							/>
+						)}
+						{currentQuestion.questionType === 'coding' && (
+							<CandidateCodingQuestion
+								// @ts-ignore
+								question={currentQuestion}
+								answers={answers}
+								setAnswers={setAnswers}
+								examId={examDetails.id}
+							/>
+						)}
+					</Grid>
+				</Grid>
+			</Layout>
+		)
+	}
 	return (
 		<Layout>
-			<Grid container>
-				<Grid item md={1}>
-					<Drawer className={classes.drawer} variant='permanent'>
-						<Toolbar />
-						<Paper
-							square
-							variant='outlined'
-							className={classes.questionList}>
-							<List>
-								{examDetails.questionList.map(
-									(question: any, key: number) => (
-										<ListItem>
-											<Button
-												fullWidth
-												color='primary'
-												variant={
-													currentQuestion === question
-														? 'contained'
-														: 'outlined'
-												}
-												onClick={() =>
-													setCurrentQuestion(question)
-												}>{`${key + 1}`}</Button>
-										</ListItem>
-									)
-								)}
-							</List>
-						</Paper>
-					</Drawer>
-				</Grid>
-				<Grid item md={11}>
-					{currentQuestion.questionType === 'mcq' && (
-						<CandidateMCQQuestion
-							// @ts-ignore
-							question={currentQuestion}
-							answers={answers}
-							setAnswers={setAnswers}
-							examId={examDetails.id}
-						/>
-					)}
-					{currentQuestion.questionType === 'coding' && (
-						<CandidateCodingQuestion
-							// @ts-ignore
-							question={currentQuestion}
-							answers={answers}
-							setAnswers={setAnswers}
-							examId={examDetails.id}
-						/>
-					)}
-				</Grid>
-			</Grid>
+			<Loading />
 		</Layout>
 	)
 }

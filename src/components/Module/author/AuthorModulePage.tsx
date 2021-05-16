@@ -12,7 +12,7 @@ import Router from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Layout from '../../../Layout'
 import { ModuleData } from '../../../types'
-import CandidateExamTile from '../../Exam/candidate/CandidateExamTile'
+import AuthorExamTile from '../../Exam/author/AuthorExamTile'
 import Loading from '../../Loading'
 
 const useStyles = makeStyles((theme) => ({
@@ -100,7 +100,7 @@ const AuthorModulePage = ({
 					</div>
 					<Divider className={classes.divider} />
 					{module?.examList.map((exam) => (
-						<CandidateExamTile examId={exam} />
+						<AuthorExamTile examId={exam} moduleId={moduleId} />
 					))}
 				</Container>
 			</Layout>

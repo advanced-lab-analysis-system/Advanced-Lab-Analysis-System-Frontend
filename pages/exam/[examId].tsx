@@ -14,31 +14,13 @@ const exam = () => {
 
 	const currRole = useUserStore((state) => state.currRole)
 
-	const [loading, setLoading] = useState(true)
-
 	useEffect(() => {
 		if (currRole === null) router.push('/dashboard')
 	}, [])
 
-	if (!loading) {
-		if (currRole === 'CANDIDATE')
-			return (
-				<CandidateExamLayout
-					examId={examId}
-					loading={loading}
-					setLoading={setLoading}
-				/>
-			)
-		if (currRole === 'AUTHOR')
-			return (
-				<AuthorExamLayout
-					examId={examId}
-					moduleId={moduleId}
-					loading={loading}
-					setLoading={setLoading}
-				/>
-			)
-	}
+	if (currRole === 'CANDIDATE') return <CandidateExamLayout examId={examId} />
+	if (currRole === 'AUTHOR')
+		return <AuthorExamLayout examId={examId} moduleId={moduleId} />
 	return (
 		<Layout>
 			<Loading />

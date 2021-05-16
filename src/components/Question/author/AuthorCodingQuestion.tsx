@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core'
 import { Delete } from '@material-ui/icons'
 import React, { useEffect } from 'react'
-import MDEditor from '../MDEditor'
+import MDEditor from '../../MDEditor'
 
 const useStyles = makeStyles((theme) => ({
 	rootPaper: {

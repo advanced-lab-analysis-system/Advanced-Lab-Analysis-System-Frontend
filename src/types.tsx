@@ -21,8 +21,8 @@ export type ExamData = {
 	id: string
 	examName: string
 	noOfQuestions: number
-	examStartTime: string
-	examEndTime: string
+	examStartTime: Date
+	examEndTime: Date
 	authorId: string
 	status: string
 	questionList: Array<CodingQuestionData | MCQQuestionData>
@@ -32,8 +32,8 @@ export type ExamDataSummary = {
 	id: string
 	examName: string
 	noOfQuestions: number
-	examStartTime: string
-	examEndTime: string
+	examStartTime: Date
+	examEndTime: Date
 	authorId: string
 	status: string
 }

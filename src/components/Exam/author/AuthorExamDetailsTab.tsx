@@ -1,4 +1,3 @@
-import MomentUtils from '@date-io/moment'
 import {
 	Button,
 	Container,
@@ -13,8 +12,11 @@ import {
 	KeyboardDatePicker,
 	KeyboardTimePicker,
 } from '@material-ui/pickers'
+
 import Router, { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
+
+import MomentUtils from '@date-io/moment'
 
 const useStyles = makeStyles((theme) => ({
 	rootContainer: {
@@ -81,7 +83,7 @@ const ExamDetailsTab = ({
 							label='Exam Name'
 							variant='outlined'
 							value={examName}
-							onChange={setExamName}
+							onChange={(e) => setExamName(e.target.value)}
 							fullWidth
 						/>
 					</Paper>
