@@ -55,46 +55,43 @@ const AuthorDashboard = () => {
 	}, [modules])
 
 	if (!loading) {
-		if (modules.length !== 0)
-			return (
-				<Layout>
-					<div
-						style={{
-							display: 'flex',
-							flexGrow: 1,
-							height: '100%',
-							flexDirection: 'column',
-						}}>
-						<div className={classes.createModule}>
-							<Button
-								variant='outlined'
-								color='primary'
-								onClick={() => Router.push('/module/create')}>
-								Create Module
-							</Button>
-						</div>
-						<Grid
-							container
-							spacing={3}
-							className={classes.moduleGrid}>
-							{modules.map((moduleData) => (
-								<Grid item md={3} sm={6} xs={12}>
-									<AuthorModuleTile
-										moduleData={
-											moduleData
-										}></AuthorModuleTile>
-								</Grid>
-							))}
-						</Grid>
+		return (
+			<Layout>
+				<div
+					style={{
+						display: 'flex',
+						flexGrow: 1,
+						height: '100%',
+						flexDirection: 'column',
+					}}>
+					<div className={classes.createModule}>
+						<Button
+							variant='outlined'
+							color='primary'
+							onClick={() => Router.push('/module/create')}>
+							Create Module
+						</Button>
 					</div>
-				</Layout>
-			)
-		else
-			return (
-				<Layout>
-					<>No Modules to Display</>
-				</Layout>
-			)
+					<Grid container spacing={3} className={classes.moduleGrid}>
+						{modules.length !== 0 && (
+							<>
+								{modules.map((moduleData) => (
+									<Grid item md={3} sm={6} xs={12}>
+										<AuthorModuleTile
+											moduleData={
+												moduleData
+											}></AuthorModuleTile>
+									</Grid>
+								))}
+							</>
+						)}
+						{modules.length === 0 && (
+							<div>No Modules to Display</div>
+						)}
+					</Grid>
+				</div>
+			</Layout>
+		)
 	}
 	return (
 		<Layout>
